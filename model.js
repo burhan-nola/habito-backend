@@ -1,9 +1,8 @@
 const mongoose = require("mongoose");
 
 const data = new mongoose.Schema({
-  ID: {
+  data: {
     type: String,
-    unique: true,
   },
 });
 
