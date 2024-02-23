@@ -3,19 +3,35 @@ const model = require("./model.js");
 
 exports.try = async (req, res) => {
   try {
-    res.status(200).json({ message: "hello" });
+    console.log("permintaan berhasil");
+    res.status(200).json([{ message: "hai" }]);
   } catch (error) {
     res.status(500).json(error);
   }
 };
 
-exports.login = async (req, res) => {
+exports.postData = async (req, res) => {
   try {
-    const data = req.body;
-    const saveData = new model(data);
+    const data = req.query.param1;
+    const dataJson = {
+      data: data,
+    };
+    const saveData = new model(dataJson);
     await saveData.save();
-    res.status(201).json({ data });
+    console.log(data);
+    res.status(201).json(saveData);
   } catch (error) {
     res.status(500).json(error);
+  }
+};
+
+exports.newPost = async (req, res) => {
+  try {
+    const { data } = req.body;
+    const newData = new model({ data });
+    await newData.save();
+    res.status(201).json({ message: "Data berhasil disimpan" });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
 };
