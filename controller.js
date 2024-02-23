@@ -30,8 +30,8 @@ exports.newPost = async (req, res) => {
   try {
     const localDate = toLocalDate();
 
-    const { data } = req.body;
-    const newData = new model({ data, dateCreated: localDate });
+    const data = req.param.name;
+    const newData = new model({ data: data, dateCreated: localDate });
     await newData.save();
     res.status(201).json({ message: "Data berhasil disimpan" });
   } catch (error) {
