@@ -1,5 +1,6 @@
 require("dotenv").config();
 const model = require("./model.js");
+const { toLocalDate } = require("./functions/toLocalDate.js");
 
 exports.try = async (req, res) => {
   try {
@@ -27,8 +28,10 @@ exports.postData = async (req, res) => {
 
 exports.newPost = async (req, res) => {
   try {
+    const localDate = toLocalDate();
+
     const { data } = req.body;
-    const newData = new model({ data });
+    const newData = new model({ data, dateCreated: localDate });
     await newData.save();
     res.status(201).json({ message: "Data berhasil disimpan" });
   } catch (error) {
