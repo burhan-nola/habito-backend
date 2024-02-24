@@ -36,7 +36,7 @@ setInterval(() => {
     // Jika perangkat dianggap offline, ubah nilai status di MongoDB
     // Misalnya, menggunakan logika ping atau heartbeat
 const id = "habito_001";
-const off = await modelDevice.FindOneAndUpdate(
+const off = await modelDevice.findOneAndUpdate(
 {idDevice: id},
 {$set({status:false})},
 {new: true}
