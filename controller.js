@@ -28,9 +28,9 @@ exports.try = async (req, res) => {
 exports.logs = async (req, res) => {
   try {
     const id = req.query.id;
-    const updateData = deviceModel.findOneAndUpdate(
+    const updateData = await deviceModel.findOneAndUpdate(
       { idDevice: id },
-      { status: true },
+      { $set: { status: true } },
       { new: true }
     );
     res.status(200).json({ message: "data updated", status: "online" });
