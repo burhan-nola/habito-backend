@@ -6,7 +6,6 @@ const device = new mongoose.Schema({
   },
   status: {
     type: Boolean,
-    default: false,
   },
   dateRegister: {
     type: Date,
