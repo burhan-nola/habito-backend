@@ -62,7 +62,7 @@ exports.logs = async (req, res) => {
     };
     const logStatus = new logsModel(saveUpdate);
     await logStatus.save();
-    res.status(200).send("Device online now");
+    res.status(200).json({ message: "Device online now" });
   } catch (error) {
     res.status(500).json(error);
   }
