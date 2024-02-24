@@ -38,7 +38,7 @@ setInterval(() => {
 const id = "habito_001";
 const off = await modelDevice.findOneAndUpdate(
 {idDevice: id},
-{$set{status:false}},
+{$set:{status:false}},
 {new: true}
 )
   }, 10000);
