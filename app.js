@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const deviceModel = require("./models/device.js");
+const deviceModel = require("./models/devices.js");
 
 require("dotenv").config();
 const router = require("./router");
