@@ -4,7 +4,8 @@ const controller = require("./controller.js");
 const router = express.Router();
 
 router.get("/try", controller.try);
-router.post("/post", controller.postData);
-router.get("/newpost", controller.newPost);
+// router.get("/newpost", controller.newPost);
+router.get("/logs", controller.logs);
+router.get("/register", controller.register);
 
 module.exports = router;

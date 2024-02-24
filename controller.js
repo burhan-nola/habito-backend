@@ -1,5 +1,6 @@
 require("dotenv").config();
-const model = require("./model.js");
+const logsModel = require("./models/logs.js");
+const deviceModel = require("./models/devices.js");
 const { toLocalDate } = require("./functions/toLocalDate.js");
 
 exports.try = async (req, res) => {
@@ -11,30 +12,45 @@ exports.try = async (req, res) => {
   }
 };
 
-exports.postData = async (req, res) => {
+// exports.newPost = async (req, res) => {
+//   try {
+//     const localDate = toLocalDate();
+
+//     const data = req.query.data;
+//     const newData = new model({ data: data, dateCreated: localDate });
+//     await newData.save();
+//     res.status(201).json({ message: "Data berhasil disimpan", save: newData });
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// };
+
+exports.logs = async (req, res) => {
   try {
-    const data = req.query.param1;
-    const dataJson = {
-      data: data,
-    };
-    const saveData = new model(dataJson);
-    await saveData.save();
-    console.log(data);
-    res.status(201).json(saveData);
+    const id = req.query.id;
+    const updateData = deviceModel.findOneAndUpdate(
+      { idDevice: id },
+      { status: true },
+      { new: true }
+    );
+    res.status(200).json({ message: "data updated", status: "online" });
   } catch (error) {
     res.status(500).json(error);
   }
 };
 
-exports.newPost = async (req, res) => {
+exports.register = async (req, res) => {
   try {
     const localDate = toLocalDate();
-
-    const data = req.query.data;
-    const newData = new model({ data: data, dateCreated: localDate });
-    await newData.save();
-    res.status(201).json({ message: "Data berhasil disimpan", save: newData });
+    const idDevice = req.query.id;
+    const data = {
+      idDevice: idDevice,
+      dateRegister: localDate,
+    };
+    const save = new deviceModel(data);
+    await save.save();
+    res.status(200).json({ message: "device registered", data });
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json(error);
   }
 };
