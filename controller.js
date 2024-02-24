@@ -62,9 +62,7 @@ exports.logs = async (req, res) => {
     };
     const logStatus = new logsModel(saveUpdate);
     await logStatus.save();
-    res
-      .status(200)
-      .json({ message: "data updated", status: "online", data: updateData });
+    res.status(200).send("Device online now");
   } catch (error) {
     res.status(500).json(error);
   }
@@ -90,7 +88,7 @@ exports.offline = async (req, res) => {
     };
     const logStatus = new logsModel(saveUpdate);
     await logStatus.save();
-    res.status(200).json({ message: "data updated", status: "offline" });
+    res.status(200).send("Device offline");
   } catch (error) {
     res.status(500).json(error);
   }
