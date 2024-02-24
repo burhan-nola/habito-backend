@@ -27,13 +27,53 @@ exports.try = async (req, res) => {
 
 exports.logs = async (req, res) => {
   try {
+    const localDate = toLocalDate();
     const id = req.query.id;
+    const cekID = await deviceModel.findOne({ idDevice: id });
+    if (!cekID) {
+      return res.status(400).json({ error: "id not found" });
+    }
     const updateData = await deviceModel.findOneAndUpdate(
       { idDevice: id },
       { $set: { status: true } },
       { new: true }
     );
-    res.status(200).json({ message: "data updated", status: "online" });
+    const saveUpdate = {
+      idDevice: id,
+      status: true,
+      date: localDate,
+    };
+    const logStatus = new logsModel(saveUpdate);
+    await logStatus.save();
+    res
+      .status(200)
+      .json({ message: "data updated", status: "online", data: updateData });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+exports.offline = async (req, res) => {
+  try {
+    const localDate = toLocalDate();
+    const id = req.query.id;
+    const cekID = await deviceModel.findOne({ idDevice: id });
+    if (!cekID) {
+      return res.status(400).json({ error: "id not found" });
+    }
+    const updateData = await deviceModel.findOneAndUpdate(
+      { idDevice: id },
+      { $set: { status: false } },
+      { new: true }
+    );
+    const saveUpdate = {
+      idDevice: id,
+      status: false,
+      date: localDate,
+    };
+    const logStatus = new logsModel(saveUpdate);
+    await logStatus.save();
+    res.status(200).json({ message: "data updated", status: "offline" });
   } catch (error) {
     res.status(500).json(error);
   }
