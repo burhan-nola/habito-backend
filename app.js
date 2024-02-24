@@ -30,13 +30,13 @@ app.listen(port, () => {
   console.log(`Service is online on port ${port}`);
 });
 
-const isOnline =async()=>{
+const isOnline =()=>{
 setInterval(() => {
     // Lakukan pemeriksaan status perangkat di sini
     // Jika perangkat dianggap offline, ubah nilai status di MongoDB
     // Misalnya, menggunakan logika ping atau heartbeat
 const id = "habito_001";
-const off = await deviceModel.findOneAndUpdate(
+const off = deviceModel.findOneAndUpdate(
 {idDevice: id},
 {$set:{status:false}},
 {new: true}
