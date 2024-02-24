@@ -29,6 +29,10 @@ exports.register = async (req, res) => {
   try {
     const localDate = toLocalDate();
     const idDevice = req.query.id;
+    const cekID = await deviceModel.findOne({ idDevice: idDevice });
+    if (cekID) {
+      return res.status(400).json({ message: "Device already registered" });
+    }
     const data = {
       idDevice: idDevice,
       status: false,

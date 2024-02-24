@@ -27,7 +27,7 @@ void setup() {
 }
 void loop() {
   if (WiFi.status() == WL_CONNECTED) {
-    if(checkStatus() == "false"){
+    if(checkStatus() == false){
       logs();
     }
   }
@@ -55,8 +55,12 @@ int logs() {
         Serial.print("HTTP Response Code: ");
         Serial.println(httpCode);
         if (httpCode > 0) {
+          DynamicJsonDocument doc(1024);
+          deserializeJson(doc, https.getString());
+          String message = doc["message"];
+          
             Serial.println("Response Body: ");
-            Serial.println(https.getString());
+            Serial.println(message);
         }
         https.end();
     } else {
@@ -65,7 +69,7 @@ int logs() {
     return 0;
 }
 
-String checkStatus() {
+bool checkStatus() {
     WiFiClientSecure client;
     client.setInsecure();
 
@@ -83,16 +87,18 @@ String checkStatus() {
         int httpCode = https.GET();
         Serial.print("HTTP Response Code: ");
         Serial.println(httpCode);
-
-        String payload = https.getString();
+        
+          DynamicJsonDocument doc(1024);
+          deserializeJson(doc, https.getString());
+          bool deviceStatus = doc["message"];
+          
         if (httpCode > 0) {
             Serial.println("Response Body: ");
-            Serial.println(https.getString());
+            Serial.println(deviceStatus);
         }
-
         https.end();
 
-        return payload;
+        return deviceStatus;
     } else {
         Serial.println("[HTTPS] Unable to connect");
 
