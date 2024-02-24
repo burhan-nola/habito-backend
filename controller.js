@@ -33,9 +33,7 @@ exports.newPost = async (req, res) => {
     const data = req.query.data;
     const newData = new model({ data: data, dateCreated: localDate });
     await newData.save();
-    res
-      .status(201)
-      .json({ message: "Data berhasil disimpan", data: data, save: newData });
+    res.status(201).json({ message: "Data berhasil disimpan", save: newData });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
