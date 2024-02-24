@@ -45,6 +45,7 @@ exports.register = async (req, res) => {
     const idDevice = req.query.id;
     const data = {
       idDevice: idDevice,
+      status: false,
       dateRegister: localDate,
     };
     const save = new deviceModel(data);
