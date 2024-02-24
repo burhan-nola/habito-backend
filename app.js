@@ -43,3 +43,5 @@ const off = await modelDevice.findOneAndUpdate(
 )
   }, 10000);
 }
+
+isOnline();
