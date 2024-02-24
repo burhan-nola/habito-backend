@@ -99,7 +99,7 @@ exports.offline = async (req, res) => {
 exports.cekStatus = async (req, res) => {
   try {
     const data = await deviceModel.findOne({ idDevice: req.query.id });
-    res.status(200).json({ status: data.status });
+    res.status(200).send(data.status);
   } catch (error) {
     res.status(500).json(error);
   }
