@@ -26,22 +26,36 @@ app.use(express.json());
 
 app.use("/", router);
 
+app.get('/api/stream', (req, res) => {
+  res.setHeader('Content-Type', 'text/event-stream');
+  res.setHeader('Cache-Control', 'no-cache');
+  res.setHeader('Connection', 'keep-alive');
+
+  // Mengirim data secara berkala ke klien
+  const interval = setInterval(async () => {
+    const data = { message: 'Pesan baru' };
+    res.write(`data: ${JSON.stringify(data)}\n\n`);
+
+    // Simpan data ke MongoDB setiap kali mengirim pembaruan
+    try {
+      await deviceModel.findOneAndUpdate(
+{idDevice:"habito_001"},
+{$set:{status: false}},
+{new:true}
+);
+      console.log('Data berhasil disimpan ke MongoDB');
+    } catch (error) {
+      console.error('Gagal menyimpan data ke MongoDB:', error);
+    }
+  }, 10000);
+
+  // Tangani penutupan koneksi
+  req.on('close', () => {
+    clearInterval(interval);
+    res.end();
+  });
+});
+
 app.listen(port, () => {
   console.log(`Service is online on port ${port}`);
 });
-
-const isOnline =()=>{
-setInterval(() => {
-    // Lakukan pemeriksaan status perangkat di sini
-    // Jika perangkat dianggap offline, ubah nilai status di MongoDB
-    // Misalnya, menggunakan logika ping atau heartbeat
-const id = "habito_001";
-const off = deviceModel.findOneAndUpdate(
-{idDevice: id},
-{$set:{status:false}},
-{new: true}
-)
-  }, 10000);
-}
-
-isOnline();
