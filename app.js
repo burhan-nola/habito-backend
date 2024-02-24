@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
+const deviceModel = require("./models/device.js");
 
 require("dotenv").config();
 const router = require("./router");
@@ -28,3 +29,17 @@ app.use("/", router);
 app.listen(port, () => {
   console.log(`Service is online on port ${port}`);
 });
+
+const isOnline =async()=>{
+setInterval(() => {
+    // Lakukan pemeriksaan status perangkat di sini
+    // Jika perangkat dianggap offline, ubah nilai status di MongoDB
+    // Misalnya, menggunakan logika ping atau heartbeat
+const id = "habito_001";
+const off = await modelDevice.FindOneAndUpdate(
+{idDevice: id},
+{$set({status:false})},
+{new: true}
+)
+  }, 10000);
+}
