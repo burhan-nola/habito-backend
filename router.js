@@ -8,5 +8,6 @@ router.get("/try", controller.try);
 router.get("/logs", controller.logs);
 router.get("/offline", controller.offline);
 router.get("/register", controller.register);
+router.get("/cek", controller.cekStatus);
 
 module.exports = router;

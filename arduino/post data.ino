@@ -1,9 +1,10 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include <WiFiClientSecure.h>
-const char* SSID = "TP-Link_5D92";
-const char* PASS = "78160446";
-String url = "https://habito-api.vercel.app/try";
+const char* SSID = "NOLA 37G";
+const char* PASS = "12345678";
+String url = "https://habito-api.vercel.app";
+//String url = "https://habito-api.vercel.app/newpost?data=new%20data%20from%20arduino";
 void setup() {
   
   Serial.begin(115200);
@@ -21,14 +22,25 @@ void setup() {
   Serial.println("WiFi connected");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP()); 
+  
+}
+void loop() {
   if (WiFi.status() == WL_CONNECTED) {
     WiFiClientSecure client;
     
     client.setInsecure();
     
     HTTPClient https;
+
+    String dataset = "habito_001";
+    dataset.replace(" ", "%20");
+
+    String endpoint = "/logs";
+    String queryID = "?id=";
     
-    String fullUrl = url;
+    String param = "?data=";
+    
+    String fullUrl = url + endpoint + queryID + dataset;
     Serial.println(" ");
     Serial.println("Requesting " + fullUrl);
     if (https.begin(client, fullUrl)) {
@@ -42,6 +54,5 @@ void setup() {
       Serial.printf("[HTTPS] Unable to connect\n");
     }
   }
-}
-void loop() {
+  delay(10000);
 }

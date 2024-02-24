@@ -25,6 +25,23 @@ exports.try = async (req, res) => {
 //   }
 // };
 
+exports.register = async (req, res) => {
+  try {
+    const localDate = toLocalDate();
+    const idDevice = req.query.id;
+    const data = {
+      idDevice: idDevice,
+      status: false,
+      dateRegister: localDate,
+    };
+    const save = new deviceModel(data);
+    await save.save();
+    res.status(200).json({ message: "device registered", data });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
 exports.logs = async (req, res) => {
   try {
     const localDate = toLocalDate();
@@ -79,18 +96,10 @@ exports.offline = async (req, res) => {
   }
 };
 
-exports.register = async (req, res) => {
+exports.cekStatus = async (req, res) => {
   try {
-    const localDate = toLocalDate();
-    const idDevice = req.query.id;
-    const data = {
-      idDevice: idDevice,
-      status: false,
-      dateRegister: localDate,
-    };
-    const save = new deviceModel(data);
-    await save.save();
-    res.status(200).json({ message: "device registered", data });
+    const data = await deviceModel.findOne({ idDevice: req.query.id });
+    res.status(200).json({ status: data.status });
   } catch (error) {
     res.status(500).json(error);
   }
