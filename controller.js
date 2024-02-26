@@ -99,26 +99,9 @@ exports.offline = async (req, res) => {
   }
 };
 
-let intervalId;
 exports.cekStatus = async (req, res) => {
   try {
-    // Hentikan interval jika sedang berjalan
-    if (intervalId) {
-      clearInterval(intervalId);
-    }
-
     const data = await deviceModel.findOne({ idDevice: req.query.id });
-
-    // Setel interval baru
-    intervalId = setInterval(async () => {
-      const localDate = toLocalDate();
-      const updateData = await deviceModel.findOneAndUpdate(
-        { idDevice: req.query.id },
-        { $set: { status: false } },
-        { new: true }
-      );
-    }, 30000);
-
     res.status(200).json({ message: data.status });
   } catch (error) {
     res.status(500).json(error);
