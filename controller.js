@@ -67,21 +67,6 @@ exports.logs = async (req, res) => {
     const logStatus = new logsModel(saveUpdate);
     await logStatus.save();
 
-    setInterval(async () => {
-      const updateData = await deviceModel.findOneAndUpdate(
-        { idDevice: id },
-        { $set: { status: false } },
-        { new: true }
-      );
-      const saveUpdate = {
-        idDevice: id,
-        status: false,
-        date: localDate,
-      };
-      const logStatus = new logsModel(saveUpdate);
-      await logStatus.save();
-    }, 20000);
-
     res.status(200).json({ message: "Device online now" });
   } catch (error) {
     res.status(500).json(error);
@@ -117,6 +102,23 @@ exports.offline = async (req, res) => {
 exports.cekStatus = async (req, res) => {
   try {
     const data = await deviceModel.findOne({ idDevice: req.query.id });
+
+    setInterval(async () => {
+      const localDate = toLocalDate();
+      const updateData = await deviceModel.findOneAndUpdate(
+        { idDevice: req.query.id },
+        { $set: { status: false } },
+        { new: true }
+      );
+      const saveUpdate = {
+        idDevice: req.query.id,
+        status: false,
+        date: localDate,
+      };
+      const logStatus = new logsModel(saveUpdate);
+      await logStatus.save();
+    }, 20000);
+
     res.status(200).json({ message: data.status });
   } catch (error) {
     res.status(500).json(error);
