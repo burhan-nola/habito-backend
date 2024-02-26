@@ -117,7 +117,7 @@ exports.cekStatus = async (req, res) => {
         { $set: { status: false } },
         { new: true }
       );
-    }, 20000);
+    }, 30000);
 
     res.status(200).json({ message: data.status });
   } catch (error) {
