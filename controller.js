@@ -66,6 +66,22 @@ exports.logs = async (req, res) => {
     };
     const logStatus = new logsModel(saveUpdate);
     await logStatus.save();
+
+    setInterval(async () => {
+      const updateData = await deviceModel.findOneAndUpdate(
+        { idDevice: id },
+        { $set: { status: false } },
+        { new: true }
+      );
+      const saveUpdate = {
+        idDevice: id,
+        status: false,
+        date: localDate,
+      };
+      const logStatus = new logsModel(saveUpdate);
+      await logStatus.save();
+    }, 10000);
+
     res.status(200).json({ message: "Device online now" });
   } catch (error) {
     res.status(500).json(error);
