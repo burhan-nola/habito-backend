@@ -21,8 +21,8 @@
 
   "crons": [
     {
-      "path": "/cronjob/cekOffline",
-      "schedule": "*/1 * * * *"
+      "path": "/offline",
+      "schedule": "* * * * *"
     }
   ]
 }
