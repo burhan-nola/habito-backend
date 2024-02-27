@@ -22,7 +22,7 @@
   "crons": [
     {
       "path": "/cronjob/cekOffline",
-      "schedule": "* * * * *"
+      "schedule": "*/1 * * * *"
     }
   ]
 }
