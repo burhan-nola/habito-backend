@@ -31,21 +31,4 @@ const cekStatus = (req, res, next) => {
   }
 };
 
-const myMiddleware = (req, res, next) => {
-  // Lakukan sesuatu setiap 5 detik
-  const intervalId = setInterval(() => {
-    console.log("Middleware is running every 5 seconds");
-    // Lakukan sesuatu di sini sesuai kebutuhan
-  }, 5000);
-
-  // Jika Anda ingin berhenti setInterval setelah beberapa saat
-  setTimeout(() => {
-    clearInterval(intervalId);
-    console.log("Interval stopped after 30 seconds");
-  }, 30000);
-
-  // Lanjutkan ke middleware berikutnya
-  next();
-};
-
-module.exports = { cekStatus, myMiddleware };
+module.exports = cekStatus;
