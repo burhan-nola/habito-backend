@@ -22,7 +22,7 @@
   "crons": [
     {
       "path": "/offline",
-      "schedule": "* * * * *"
+      "schedule": "0 * * * *"
     }
   ]
 }
