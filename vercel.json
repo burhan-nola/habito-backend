@@ -20,8 +20,8 @@
   ],
   "crons": [
     {
-      "path": "/offline",
-      "schedule": "0 * * * *"
+      "path": "/api/cron",
+      "schedule": "0 5 * * *"
     }
   ]
 }
