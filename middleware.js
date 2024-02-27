@@ -22,7 +22,7 @@ const cekStatus = (req, res, next) => {
     };
     setTimeout(() => {
       offline();
-    }, 10000);
+    }, 20000);
     next();
   } catch (error) {
     res.status(400).json(error);
