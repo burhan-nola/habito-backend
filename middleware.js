@@ -2,6 +2,7 @@ const logsModel = require("./models/logs.js");
 const deviceModel = require("./models/devices.js");
 const { toLocalDate } = require("./functions/toLocalDate.js");
 
+let timeoutId;
 const cekStatus = (req, res, next) => {
   try {
     const offline = async () => {
@@ -20,7 +21,8 @@ const cekStatus = (req, res, next) => {
       await logStatus.save();
       console.log("device offline");
     };
-    setTimeout(() => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
       offline();
     }, 20000);
     next();
@@ -28,4 +30,5 @@ const cekStatus = (req, res, next) => {
     res.status(400).json(error);
   }
 };
+
 module.exports = cekStatus;
