@@ -17,5 +17,12 @@
       "src": "/(.*)",
       "dest": "app.js"
     }
+  ],
+
+  "crons": [
+    {
+      "path": "/cronjob/cekOffline",
+      "schedule": "* * * * *"
+    }
   ]
 }
