@@ -6,7 +6,7 @@ const { toLocalDate } = require("./functions/toLocalDate.js");
 const deviceModel = require("./models/devices.js");
 const logsModel = require("./models/logs.js");
 
-app.get("/cek-offline", async (req, res) => {
+app.get("/cek-online", async (req, res) => {
   const localDate = toLocalDate();
   const updateData = await deviceModel.findOneAndUpdate(
     { idDevice: "habito_001" },
