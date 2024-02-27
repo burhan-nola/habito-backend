@@ -2,6 +2,7 @@ require("dotenv").config();
 const logsModel = require("./models/logs.js");
 const deviceModel = require("./models/devices.js");
 const { toLocalDate } = require("./functions/toLocalDate.js");
+const localDate = toLocalDate();
 
 exports.try = async (req, res) => {
   try {
@@ -11,19 +12,6 @@ exports.try = async (req, res) => {
     res.status(500).json(error);
   }
 };
-
-// exports.newPost = async (req, res) => {
-//   try {
-//     const localDate = toLocalDate();
-
-//     const data = req.query.data;
-//     const newData = new model({ data: data, dateCreated: localDate });
-//     await newData.save();
-//     res.status(201).json({ message: "Data berhasil disimpan", save: newData });
-//   } catch (error) {
-//     res.status(500).json({ error: error.message });
-//   }
-// };
 
 exports.register = async (req, res) => {
   try {
@@ -103,7 +91,22 @@ exports.offline = async (req, res) => {
 exports.cekStatus = async (req, res) => {
   try {
     const data = await deviceModel.findOne({ idDevice: req.query.id });
-    res.status(200).json({ message: data.status });
+    const lastUpdate = data.lastUpdate.getTime();
+    res.status(200).json({ message: data.status, lastUpdate: lastUpdate });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+exports.alwaysOnline = async (req, res) => {
+  try {
+    const updateData = await deviceModel.findOneAndUpdate(
+      { idDevice: req.query.id },
+      { $set: { status: true, lastUpdate: localDate } },
+      { new: true }
+    );
+
+    res.status(200).json({ message: updateData.status });
   } catch (error) {
     res.status(500).json(error);
   }
