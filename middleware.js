@@ -22,8 +22,8 @@ const cekStatus = (req, res, next) => {
       console.log("device offline");
     };
     clearTimeout(timeoutId);
-    timeoutId = setTimeout(() => {
-      offline();
+    timeoutId = setTimeout(async () => {
+      await offline();
     }, 5000);
     next();
   } catch (error) {
