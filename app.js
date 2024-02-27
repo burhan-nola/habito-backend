@@ -1,11 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const cron = require("node-cron");
 const mongoose = require("mongoose");
-
-const deviceModel = require("./models/devices.js");
-const logsModel = require("./models/logs.js");
-const { toLocalDate } = require("./functions/toLocalDate.js");
 
 require("dotenv").config();
 const router = require("./router");

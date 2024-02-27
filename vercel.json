@@ -17,11 +17,5 @@
       "src": "/(.*)",
       "dest": "app.js"
     }
-  ],
-  "crons": [
-    {
-      "path": "/offline",
-      "schedule": "0 * * * *"
-    }
   ]
 }
