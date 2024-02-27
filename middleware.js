@@ -1,3 +1,4 @@
+const logsModel = require("./models/logs.js");
 const deviceModel = require("./models/devices.js");
 const { toLocalDate } = require("./functions/toLocalDate.js");
 
@@ -17,6 +18,7 @@ const cekStatus = (req, res, next) => {
       };
       const logStatus = new logsModel(saveUpdate);
       await logStatus.save();
+      console.log("device offline");
     };
     setTimeout(() => {
       offline();
