@@ -18,7 +18,6 @@
       "dest": "app.js"
     }
   ],
-
   "crons": [
     {
       "path": "/offline",
