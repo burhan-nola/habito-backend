@@ -24,11 +24,28 @@ const cekStatus = (req, res, next) => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => {
       offline();
-    }, 1000);
+    }, 5000);
     next();
   } catch (error) {
     res.status(400).json(error);
   }
 };
 
-module.exports = cekStatus;
+const myMiddleware = (req, res, next) => {
+  // Lakukan sesuatu setiap 5 detik
+  const intervalId = setInterval(() => {
+    console.log("Middleware is running every 5 seconds");
+    // Lakukan sesuatu di sini sesuai kebutuhan
+  }, 5000);
+
+  // Jika Anda ingin berhenti setInterval setelah beberapa saat
+  setTimeout(() => {
+    clearInterval(intervalId);
+    console.log("Interval stopped after 30 seconds");
+  }, 30000);
+
+  // Lanjutkan ke middleware berikutnya
+  next();
+};
+
+module.exports = { cekStatus, myMiddleware };
