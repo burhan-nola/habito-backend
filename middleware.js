@@ -24,7 +24,7 @@ const cekStatus = (req, res, next) => {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => {
       offline();
-    }, 20000);
+    }, 10000);
     next();
   } catch (error) {
     res.status(400).json(error);
