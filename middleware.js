@@ -7,7 +7,7 @@ const cekStatus = (req, res, next) => {
       const localDate = toLocalDate();
       const updateData = await deviceModel.findOneAndUpdate(
         { idDevice: "habito_001" },
-        { $set: { status: false } },
+        { $set: { status: false, lastUpdate: localDate } },
         { new: true }
       );
       const saveUpdate = {

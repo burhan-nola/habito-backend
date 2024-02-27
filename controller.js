@@ -36,6 +36,7 @@ exports.register = async (req, res) => {
     const data = {
       idDevice: idDevice,
       status: false,
+      lastUpdate: localDate,
       dateRegister: localDate,
     };
     const save = new deviceModel(data);
@@ -56,7 +57,7 @@ exports.logs = async (req, res) => {
     }
     const updateData = await deviceModel.findOneAndUpdate(
       { idDevice: id },
-      { $set: { status: true } },
+      { $set: { status: true, lastUpdate: localDate } },
       { new: true }
     );
     const saveUpdate = {

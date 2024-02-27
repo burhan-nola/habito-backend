@@ -8,6 +8,9 @@ const device = new mongoose.Schema({
   status: {
     type: Boolean,
   },
+  lastUpdate: {
+    type: Date,
+  },
   dateRegister: {
     type: Date,
   },
