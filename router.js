@@ -1,13 +1,13 @@
 const express = require("express");
-const controller = require("./controller.js");
+const logStatus = require("./controllers/logStatus.js");
 
 const router = express.Router();
 
-router.get("/try", controller.try);
-router.get("/logs", controller.logs);
-router.get("/offline", controller.offline);
-router.get("/register", controller.register);
-router.get("/cek", controller.cekStatus);
-router.get("/keep-online", controller.alwaysOnline);
+router.get("/try", logStatus.try);
+router.get("/logs", logStatus.logs);
+router.get("/offline", logStatus.offline);
+router.get("/register", logStatus.register);
+router.get("/cek", logStatus.cekStatus);
+router.get("/keep-online", logStatus.alwaysOnline);
 
 module.exports = router;

@@ -1,5 +1,5 @@
 require("dotenv").config();
-const deviceModel = require("./models/devices.js");
+const deviceModel = require("../models/devices.js");
 
 exports.try = async (req, res) => {
   try {
