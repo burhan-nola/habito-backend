@@ -1,30 +1,10 @@
 const mongoose = require("mongoose");
 
 const light = new mongoose.Schema({
-  red: [
-    {
-      status: Boolean,
-      timeStamp: Date,
-    },
-  ],
-  green: [
-    {
-      status: Boolean,
-      timeStamp: Date,
-    },
-  ],
-  blue: [
-    {
-      status: Boolean,
-      timeStamp: Date,
-    },
-  ],
-  yellow: [
-    {
-      status: Boolean,
-      timeStamp: Date,
-    },
-  ],
+  red: [log],
+  green: [log],
+  blue: [log],
+  yellow: [log],
 });
 
 const log = new mongoose.Schema({
