@@ -1,8 +1,6 @@
 require("dotenv").config();
 const logsModel = require("./models/logs.js");
 const deviceModel = require("./models/devices.js");
-const { toLocalDate } = require("./functions/toLocalDate.js");
-const localDate = toLocalDate();
 
 exports.try = async (req, res) => {
   try {
@@ -53,7 +51,7 @@ exports.logs = async (req, res) => {
 
     res
       .status(200)
-      .json({ message: "Device online now", date: logStatus.date });
+      .json({ message: "Device online now", date: updateData.lastUpdate });
   } catch (error) {
     res.status(500).json(error);
   }
