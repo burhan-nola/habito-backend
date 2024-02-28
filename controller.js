@@ -1,5 +1,4 @@
 require("dotenv").config();
-const logsModel = require("./models/logs.js");
 const deviceModel = require("./models/devices.js");
 
 exports.try = async (req, res) => {
@@ -42,12 +41,12 @@ exports.logs = async (req, res) => {
       { $set: { status: true, lastUpdate: new Date() } },
       { new: true }
     );
-    const saveUpdate = {
-      idDevice: id,
+    const logData = {
       status: true,
+      date: updateData.lastUpdate,
     };
-    const logStatus = new logsModel(saveUpdate);
-    await logStatus.save();
+    cekID.logs.push(logData);
+    await cekID.save();
 
     res
       .status(200)
@@ -69,12 +68,12 @@ exports.offline = async (req, res) => {
       { $set: { status: false, lastUpdate: new Date() } },
       { new: true }
     );
-    const saveUpdate = {
-      idDevice: id,
+    const logData = {
       status: false,
+      date: updateData.lastUpdate,
     };
-    const logStatus = new logsModel(saveUpdate);
-    await logStatus.save();
+    cekID.logs.push(logData);
+    await cekID.save();
     res.status(200).json({ message: "Device offline", date: logStatus.date });
   } catch (error) {
     res.status(500).json(error);
@@ -104,12 +103,13 @@ exports.cekStatus = async (req, res) => {
         { $set: { status: false, lastUpdate: thisTime + elapseTime } },
         { new: true }
       );
-      const saveUpdate = {
-        idDevice: req.query.id,
+      const logData = {
         status: false,
+        date: updateData.lastUpdate,
       };
-      const logStatus = new logsModel(saveUpdate);
-      await logStatus.save();
+      data.logs.push(logData);
+      await data.save();
+
       return res.status(200).json({
         message: `Device offline since ${second} seconds ago`,
         lastUpdate: updateData.lastUpdate,
@@ -127,13 +127,26 @@ exports.cekStatus = async (req, res) => {
 
 exports.alwaysOnline = async (req, res) => {
   try {
+    const date = new Date();
+    const data = await deviceModel.findOne({ idDevice: req.query.id });
+    const lastStatus = data.logs[data.logs.length - 1].status;
+    if (!lastStatus) {
+      const logData = {
+        status: true,
+        date: date,
+      };
+      data.logs.push(logData);
+      await data.save();
+    }
     const updateData = await deviceModel.findOneAndUpdate(
       { idDevice: req.query.id },
-      { $set: { status: true, lastUpdate: new Date() } },
+      { $set: { status: true, lastUpdate: date } },
       { new: true }
     );
 
-    res.status(200).json({ message: updateData.status });
+    res
+      .status(200)
+      .json({ message: updateData.status, lastStatus: lastStatus });
   } catch (error) {
     res.status(500).json(error);
   }
