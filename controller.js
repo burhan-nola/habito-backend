@@ -92,14 +92,15 @@ exports.cekStatus = async (req, res) => {
     const second = Math.round(elapseTime / 1000);
 
     if (!data.status) {
-      return res
-        .status(200)
-        .json({ message: `Device offline since ${second} seconds ago` });
+      return res.status(200).json({
+        message: `Device offline since ${second} seconds ago`,
+        lastUpdate: thisTime + elapseTime,
+      });
     }
     if (second > 5) {
       const updateData = await deviceModel.findOneAndUpdate(
         { idDevice: req.query.id },
-        { $set: { status: false, lastUpdate: thisTime } },
+        { $set: { status: false, lastUpdate: thisTime + elapseTime } },
         { new: true }
       );
       const saveUpdate = {
@@ -109,7 +110,8 @@ exports.cekStatus = async (req, res) => {
       const logStatus = new logsModel(saveUpdate);
       await logStatus.save();
       return res.status(200).json({
-        message: `Device offline now`,
+        message: `Device offline since ${second} seconds ago`,
+        lastUpdate: updateData.lastUpdate,
       });
     }
     res.status(200).json({
