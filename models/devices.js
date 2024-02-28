@@ -1,12 +1,5 @@
 const mongoose = require("mongoose");
 
-const light = new mongoose.Schema({
-  red: [log],
-  green: [log],
-  blue: [log],
-  yellow: [log],
-});
-
 const log = new mongoose.Schema({
   status: {
     type: Boolean,
@@ -15,6 +8,13 @@ const log = new mongoose.Schema({
     type: Date,
     default: new Date(),
   },
+});
+
+const light = new mongoose.Schema({
+  red: [log],
+  green: [log],
+  blue: [log],
+  yellow: [log],
 });
 
 const device = new mongoose.Schema({
