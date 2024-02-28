@@ -10,11 +10,11 @@ const device = new mongoose.Schema({
   },
   lastUpdate: {
     type: Date,
-    default: Date(),
+    default: new Date(),
   },
   dateRegister: {
     type: Date,
-    default: Date(),
+    default: new Date(),
   },
 });
 

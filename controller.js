@@ -93,10 +93,11 @@ exports.cekStatus = async (req, res) => {
 
     if (!data.status) {
       return res.status(200).json({
-        message: `Device offline since ${second} seconds ago`,
-        lastUpdate: thisTime + elapseTime,
+        message: `Device offline since ${lastUpdate.getHours()}:${lastUpdate.getMinutes()}:${lastUpdate.getSeconds()}`,
+        status: data.status,
       });
     }
+
     if (second > 5) {
       const updateData = await deviceModel.findOneAndUpdate(
         { idDevice: req.query.id },
@@ -115,7 +116,8 @@ exports.cekStatus = async (req, res) => {
       });
     }
     res.status(200).json({
-      message: data.status,
+      message: "Device online",
+      status: data.status,
       elapseTime: second,
     });
   } catch (error) {
