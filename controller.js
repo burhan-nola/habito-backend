@@ -93,9 +93,7 @@ exports.cekStatus = async (req, res) => {
 
     if (!data.status) {
       return res.status(200).json({
-        message: `Device offline since ${
-          lastUpdate.getHours() + 7
-        }:${lastUpdate.getMinutes()}:${lastUpdate.getSeconds()}`,
+        message: `Device offline since ${lastUpdate.getHours()}:${lastUpdate.getMinutes()}:${lastUpdate.getSeconds()}`,
         status: data.status,
       });
     }
