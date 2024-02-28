@@ -31,4 +31,4 @@ const cekStatus = (req, res, next) => {
   }
 };
 
-module.exports = cekStatus;
+module.exports = { cekStatus };

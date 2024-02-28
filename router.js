@@ -9,6 +9,6 @@ router.get("/logs", controller.logs);
 router.get("/offline", controller.offline);
 router.get("/register", controller.register);
 router.get("/cek", controller.cekStatus);
-router.get("/keep-online", middleware, controller.alwaysOnline);
+router.get("/keep-online", controller.alwaysOnline);
 
 module.exports = router;
