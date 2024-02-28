@@ -1,5 +1,32 @@
 const mongoose = require("mongoose");
 
+const light = new mongoose.Schema({
+  red: [
+    {
+      status: Boolean,
+      timeStamp: Date,
+    },
+  ],
+  green: [
+    {
+      status: Boolean,
+      timeStamp: Date,
+    },
+  ],
+  blue: [
+    {
+      status: Boolean,
+      timeStamp: Date,
+    },
+  ],
+  yellow: [
+    {
+      status: Boolean,
+      timeStamp: Date,
+    },
+  ],
+});
+
 const log = new mongoose.Schema({
   status: {
     type: Boolean,
@@ -27,6 +54,7 @@ const device = new mongoose.Schema({
     default: new Date(),
   },
   logs: [log],
+  light: light,
 });
 
 module.exports = mongoose.model("device", device);
