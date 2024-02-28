@@ -100,7 +100,7 @@ exports.cekStatus = async (req, res) => {
     if (second > 5) {
       const updateData = await deviceModel.findOneAndUpdate(
         { idDevice: req.query.id },
-        { $set: { status: false, lastUpdate: thisTime + elapseTime } },
+        { $set: { status: false, lastUpdate: thisTime - elapseTime } },
         { new: true }
       );
       const logData = {
