@@ -17,9 +17,18 @@ exports.register = async (req, res) => {
     if (cekID) {
       return res.status(400).json({ message: "Device already registered" });
     }
+    const lightStatus = {
+      status: false,
+    };
     const data = {
       idDevice: idDevice,
       status: false,
+      light: {
+        red: lightStatus,
+        green: lightStatus,
+        blue: lightStatus,
+        yellor: lightStatus,
+      },
     };
     const save = new deviceModel(data);
     await save.save();

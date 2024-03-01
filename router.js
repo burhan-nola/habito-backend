@@ -1,5 +1,6 @@
 const express = require("express");
 const logStatus = require("./controllers/logStatus.js");
+const lightStatus = require("./controllers/lightStatus.js");
 
 const router = express.Router();
 
@@ -10,4 +11,6 @@ router.get("/register", logStatus.register);
 router.get("/cek", logStatus.cekStatus);
 router.get("/keep-online", logStatus.alwaysOnline);
 
+//light status
+router.get("red", lightStatus.redLight);
 module.exports = router;

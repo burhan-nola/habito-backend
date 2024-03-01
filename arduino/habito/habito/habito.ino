@@ -5,13 +5,28 @@
 
 const char* SSID = "NOLA 37G";
 const char* PASS = "12345678";
+String idDevice = "habito_001";
 String url = "https://habito-api.vercel.app";
-void setup() {
-  
+
+void setup() {  
   Serial.begin(115200);
+  connectWiFi();
+  regDevice();
+  logs();
+}
+void loop() {
+  if (WiFi.status() == WL_CONNECTED) {
+    online();
+    redLight();
+  } else {
+     connectWiFi(); 
+    }
+  delay(1000);
+}
+
+void connectWiFi() {
   delay(10);
   Serial.println();
-  
   Serial.print("Connecting to ");
   Serial.println(SSID);
   WiFi.begin(SSID, PASS);
@@ -23,15 +38,6 @@ void setup() {
   Serial.println("WiFi connected");
   Serial.println("IP address: ");
   Serial.println(WiFi.localIP()); 
-  regDevice();
-}
-void loop() {
-  if (WiFi.status() == WL_CONNECTED) {
-    if(!checkStatus()){
-      logs();
-    }
-  }
-  delay(10000);
 }
 
 void logs() {
@@ -39,13 +45,12 @@ void logs() {
     client.setInsecure();
 
     HTTPClient https;
-    String dataset = "habito_001";
-    dataset.replace(" ", "%20");
+    //dataset.replace(" ", "%20");
 
     String endpoint = "/logs";
     String query = "?id=";
 
-    String fullUrl = url + endpoint + query + dataset;
+    String fullUrl = url + endpoint + query + idDevice;
     
     Serial.print("Requesting: ");
     Serial.println(fullUrl);
@@ -68,13 +73,12 @@ void logs() {
     }
 }
 
-bool checkStatus() {
+bool online() {
     WiFiClientSecure client;
     client.setInsecure();
 
     HTTPClient https;
-    String idDevice = "habito_001";
-    String endpoint = "/cek";
+    String endpoint = "/keep-online";
     String query = "?id=";
 
     String fullUrl = url + endpoint + query + idDevice;
@@ -111,7 +115,6 @@ String regDevice(){
     client.setInsecure();
 
     HTTPClient https;
-    String idDevice = "habito_001";
     String endpoint = "/register";
     String query = "?id=";
 
@@ -142,4 +145,31 @@ String regDevice(){
         // Return a value to indicate an error, for example, -1
         return "Unable to connect";
     }
+}
+
+void redLight(){
+  WiFiClientSecure client;
+  client.setInsecure();
+
+  HTTPClient https;
+  String endpoint = "/red";
+  String query = "?id=";
+  
+  String fullUrl = url + endpoint + query + idDevice;
+  
+  if (https.begin(client, fullUrl)) {
+    int httpCode = https.GET();
+    Serial.print("HTTP Response Code: ");
+    Serial.println(httpCode);
+    if (httpCode > 0) {
+      DynamicJsonDocument doc(1024);
+      deserializeJson(doc, https.getString());
+      String message = doc["message"];
+        Serial.println("Response Body: ");
+        Serial.println(message);
+    }
+    https.end();
+  } else {
+      Serial.println("[HTTPS] Unable to connect");
+  }
 }
