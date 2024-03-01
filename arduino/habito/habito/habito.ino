@@ -152,10 +152,12 @@ void redLight(){
   client.setInsecure();
 
   HTTPClient https;
-  String endpoint = "/red";
+  String endpoint = "/light";
+  String light = "&light=";
   String query = "?id=";
+  String color = "red"
   
-  String fullUrl = url + endpoint + query + idDevice;
+  String fullUrl = url + endpoint + query + idDevice + light + color;
   
   if (https.begin(client, fullUrl)) {
     int httpCode = https.GET();

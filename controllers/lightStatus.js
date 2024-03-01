@@ -1,10 +1,11 @@
 const deviceModel = require("../models/devices.js");
 
-exports.redLight = async (req, res) => {
+exports.light = async (req, res) => {
   try {
+    const light = req.query.light;
     const date = new Date();
     const data = await deviceModel.findOne({ idDevice: req.query.id });
-    const lightData = data.light.red;
+    const lightData = data.light.light;
     const lastStatus = lightData[lightData.length - 1];
     if (!lastStatus.status) {
       const updateData = {

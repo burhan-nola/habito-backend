@@ -12,5 +12,5 @@ router.get("/cek", logStatus.cekStatus);
 router.get("/keep-online", logStatus.alwaysOnline);
 
 //light status
-router.get("/red", lightStatus.redLight);
+router.get("/light", lightStatus.light);
 module.exports = router;
