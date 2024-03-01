@@ -27,7 +27,7 @@ exports.register = async (req, res) => {
         red: lightStatus,
         green: lightStatus,
         blue: lightStatus,
-        yellor: lightStatus,
+        yellow: lightStatus,
       },
     };
     const save = new deviceModel(data);

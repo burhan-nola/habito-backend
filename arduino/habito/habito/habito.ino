@@ -155,9 +155,12 @@ void redLight(){
   String endpoint = "/light";
   String light = "&light=";
   String query = "?id=";
-  String color = "red"
+  String color = "red";
   
   String fullUrl = url + endpoint + query + idDevice + light + color;
+   
+  Serial.print("Requesting: ");
+  Serial.println(fullUrl);
   
   if (https.begin(client, fullUrl)) {
     int httpCode = https.GET();

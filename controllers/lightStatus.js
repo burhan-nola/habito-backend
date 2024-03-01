@@ -5,7 +5,7 @@ exports.light = async (req, res) => {
     const light = req.query.light;
     const date = new Date();
     const data = await deviceModel.findOne({ idDevice: req.query.id });
-    const lightData = data.light.light;
+    const lightData = data.light[light];
     const lastStatus = lightData[lightData.length - 1];
     if (!lastStatus.status) {
       const updateData = {
@@ -17,7 +17,7 @@ exports.light = async (req, res) => {
       await data.save();
       return res
         .status(201)
-        .json({ mesage: "red light is on", data: lightData });
+        .json({ mesage: `${light} light is on`, data: updateData });
     }
     res.status(200).json({ mesage: "Task is done" });
   } catch (error) {
