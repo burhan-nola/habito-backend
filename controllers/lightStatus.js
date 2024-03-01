@@ -17,7 +17,7 @@ exports.light = async (req, res) => {
       await data.save();
       return res
         .status(201)
-        .json({ mesage: `${light} light is on`, data: updateData });
+        .json({ message: `${light} light is on`, data: updateData });
     }
     res.status(200).json({ message: "Task is done" });
   } catch (error) {
