@@ -17,7 +17,9 @@ void setup() {
 void loop() {
   if (WiFi.status() == WL_CONNECTED) {
     online();
-    redLight();
+    
+  String color = "green";
+    light(color);
   } else {
      connectWiFi(); 
     }
@@ -147,7 +149,7 @@ String regDevice(){
     }
 }
 
-void redLight(){
+void light(String color){
   WiFiClientSecure client;
   client.setInsecure();
 
@@ -155,7 +157,6 @@ void redLight(){
   String endpoint = "/light";
   String light = "&light=";
   String query = "?id=";
-  String color = "red";
   
   String fullUrl = url + endpoint + query + idDevice + light + color;
    
