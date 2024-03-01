@@ -5,27 +5,33 @@
 
 const char* SSID = "NOLA 37G";
 const char* PASS = "12345678";
-String idDevice = "habito_001";
-String url = "https://habito-api.vercel.app";
+String idDevice = "habito_001"; //change this based on the device id
+String url = "https://habito-api.vercel.app"; //this is the API url
 
 void setup() {  
   Serial.begin(115200);
-  connectWiFi();
-  regDevice();
-  logs();
+  connectWiFi(); //function to connect WiFi
+  regDevice(); //function to register device when device start
+  logs(); //function to change device status (online)
 }
 void loop() {
   if (WiFi.status() == WL_CONNECTED) {
-    online();
     
-  String color = "green";
+    online(); //this function makes device always online, it called heartbeat function
+
+    //start to change light status
+    String color = "green"; //change the color
     light(color);
+    //end
+    
   } else {
-     connectWiFi(); 
+     connectWiFi(); //if device disconnected from interner, it will reconnect
     }
   delay(1000);
 }
 
+
+//just copy paste all functions below and you just call the function that you need
 void connectWiFi() {
   delay(10);
   Serial.println();
@@ -47,7 +53,6 @@ void logs() {
     client.setInsecure();
 
     HTTPClient https;
-    //dataset.replace(" ", "%20");
 
     String endpoint = "/logs";
     String query = "?id=";
@@ -106,8 +111,6 @@ bool online() {
         return deviceStatus;
     } else {
         Serial.println("[HTTPS] Unable to connect");
-
-        // Return a value to indicate an error, for example, -1
         return "Unable to connect";
     }
 }
@@ -143,8 +146,6 @@ String regDevice(){
         return message;
     } else {
         Serial.println("[HTTPS] Unable to connect");
-
-        // Return a value to indicate an error, for example, -1
         return "Unable to connect";
     }
 }
