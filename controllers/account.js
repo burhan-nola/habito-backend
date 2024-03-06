@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const accountModel = require("../models/accounts.js");
+require("dotenv").config();
 
 exports.register = async (req, res) => {
   try {
