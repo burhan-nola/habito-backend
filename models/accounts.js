@@ -8,7 +8,7 @@ const account = new mongoose.Schema({
   password: {
     type: String,
   },
-  ownner: {
+  owner: {
     type: String,
   },
   dateCreated: {
