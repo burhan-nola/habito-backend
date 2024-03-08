@@ -43,11 +43,13 @@ exports.login = async (req, res) => {
 exports.userDeviceData = async (req, res) => {
   try {
     const data = await deviceModel.findOne({ idDevice: req.query.id });
+    const user = await accountModel.findOne({ deviceID: req.query.id });
     if (!data) {
       return res.status(400).json({ message: "data not found" });
     }
     const sendData = {
       deviceID: data.idDevice,
+      owner: user.owner,
       status: data.status,
       lastUpdate: data.lastUpdate,
     };

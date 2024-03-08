@@ -8,6 +8,9 @@ const account = new mongoose.Schema({
   password: {
     type: String,
   },
+  ownner: {
+    type: String,
+  },
   dateCreated: {
     type: Date,
     default: new Date(),
