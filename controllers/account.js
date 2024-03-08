@@ -34,7 +34,7 @@ exports.login = async (req, res) => {
     res.cookie("token", token, { maxAge: 24 * 60 * 60 * 1000 });
     res
       .status(200)
-      .json({ message: "Login berhasil", deviceID: data.deviceID, token });
+      .json({ message: "Login berhasil", idDevice: data.idDevice, token });
   } catch (error) {
     res.status(500).json(error);
   }
