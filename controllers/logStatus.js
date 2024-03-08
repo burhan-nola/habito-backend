@@ -1,5 +1,6 @@
 require("dotenv").config();
 const deviceModel = require("../models/devices.js");
+const accountModel = require("../models/accounts.js");
 
 exports.try = async (req, res) => {
   try {
@@ -92,18 +93,28 @@ exports.offline = async (req, res) => {
 exports.cekStatus = async (req, res) => {
   try {
     const data = await deviceModel.findOne({ idDevice: req.query.id });
+    const user = await accountModel.findOne({ idDevice: req.query.id });
+
     const lastUpdate = data.lastUpdate;
     const thisTime = new Date();
     const elapseTime = thisTime - lastUpdate;
     const second = Math.round(elapseTime / 1000);
 
+    const sendData = {
+      deviceID: data.idDevice,
+      owner: user.owner,
+      status: data.status,
+      lastUpdate: data.lastUpdate,
+      light: {
+        red: data.light.red[data.light.red.length - 1],
+        green: data.light.green[data.light.green.length - 1],
+        blue: data.light.blue[data.light.blue.length - 1],
+        yellow: data.light.yellow[data.light.yellow.length - 1],
+      },
+    };
+
     if (!data.status) {
-      return res.status(200).json({
-        message: `Device offline since ${
-          lastUpdate.getHours() + 7
-        }:${lastUpdate.getMinutes()}:${lastUpdate.getSeconds()}`,
-        status: data.status,
-      });
+      return res.status(200).json(sendData);
     }
 
     if (second > 5) {
@@ -118,17 +129,11 @@ exports.cekStatus = async (req, res) => {
       };
       data.logs.push(logData);
       await data.save();
-
-      return res.status(200).json({
-        message: `Device offline since ${second} seconds ago`,
-        lastUpdate: updateData.lastUpdate,
-      });
+      console.log(elapseTime);
+      sendData.status = false;
+      return res.status(200).json(sendData);
     }
-    res.status(200).json({
-      message: "Device online",
-      status: data.status,
-      elapseTime: second,
-    });
+    res.status(200).json(sendData);
   } catch (error) {
     res.status(500).json(error);
   }

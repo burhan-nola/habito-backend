@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const account = new mongoose.Schema({
-  deviceID: {
+  idDevice: {
     type: String,
     unique: true,
   },

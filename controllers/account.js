@@ -39,28 +39,3 @@ exports.login = async (req, res) => {
     res.status(500).json(error);
   }
 };
-
-exports.userDeviceData = async (req, res) => {
-  try {
-    const data = await deviceModel.findOne({ idDevice: req.query.id });
-    const user = await accountModel.findOne({ deviceID: req.query.id });
-    if (!data) {
-      return res.status(400).json({ message: "data not found" });
-    }
-    const sendData = {
-      deviceID: data.idDevice,
-      owner: user.owner,
-      status: data.status,
-      lastUpdate: data.lastUpdate,
-      light: {
-        red: data.light.red[data.light.red.length - 1],
-        green: data.light.green[data.light.green.length - 1],
-        blue: data.light.blue[data.light.blue.length - 1],
-        yellow: data.light.yellow[data.light.yellow.length - 1],
-      },
-    };
-    res.status(200).json(sendData);
-  } catch (error) {
-    res.status(500).json(error);
-  }
-};

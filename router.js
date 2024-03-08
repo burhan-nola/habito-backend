@@ -18,6 +18,5 @@ router.get("/light", lightStatus.light);
 //web
 router.post("/register-user", account.register);
 router.post("/login", account.login);
-router.get("/user-device", account.userDeviceData);
 
 module.exports = router;
