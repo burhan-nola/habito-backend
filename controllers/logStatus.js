@@ -23,6 +23,8 @@ exports.register = async (req, res) => {
     };
     const data = {
       idDevice: idDevice,
+      owner: req.query.owner,
+      password: req.query.password,
       status: false,
       light: {
         red: lightStatus,
@@ -93,7 +95,7 @@ exports.offline = async (req, res) => {
 exports.cekStatus = async (req, res) => {
   try {
     const data = await deviceModel.findOne({ idDevice: req.query.id });
-    const user = await accountModel.findOne({ idDevice: req.query.id });
+    // const user = await accountModel.findOne({ idDevice: req.query.id });
 
     const lastUpdate = data.lastUpdate;
     const thisTime = new Date();
@@ -101,16 +103,10 @@ exports.cekStatus = async (req, res) => {
     const second = Math.round(elapseTime / 1000);
 
     const sendData = {
-      deviceID: data.idDevice,
-      owner: user.owner,
+      idDevice: data.idDevice,
+      owner: data.owner,
       status: data.status,
       lastUpdate: data.lastUpdate,
-      light: {
-        red: data.light.red[data.light.red.length - 1],
-        green: data.light.green[data.light.green.length - 1],
-        blue: data.light.blue[data.light.blue.length - 1],
-        yellow: data.light.yellow[data.light.yellow.length - 1],
-      },
     };
 
     if (!data.status) {
@@ -118,20 +114,20 @@ exports.cekStatus = async (req, res) => {
     }
 
     if (second > 5) {
-      const updateData = await deviceModel.findOneAndUpdate(
-        { idDevice: req.query.id },
-        { $set: { status: false, lastUpdate: thisTime - elapseTime } },
-        { new: true }
-      );
+      const updateData = await deviceModel
+        .findOneAndUpdate(
+          { idDevice: req.query.id },
+          { $set: { status: false, lastUpdate: thisTime - elapseTime } },
+          { new: true }
+        )
+        .select({ idDevice: 1, status: 1, owner: 1, lastUpdate: 1 });
       const logData = {
         status: false,
         date: updateData.lastUpdate,
       };
       data.logs.push(logData);
       await data.save();
-      console.log(elapseTime);
-      sendData.status = false;
-      return res.status(200).json(sendData);
+      return res.status(200).json(updateData);
     }
     res.status(200).json(sendData);
   } catch (error) {

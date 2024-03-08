@@ -22,6 +22,12 @@ const device = new mongoose.Schema({
     type: String,
     unique: true,
   },
+  password: {
+    type: String,
+  },
+  owner: {
+    type: String,
+  },
   status: {
     type: Boolean,
   },
