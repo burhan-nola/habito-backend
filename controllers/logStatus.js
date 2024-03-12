@@ -30,6 +30,7 @@ const offsetInMinutes = +420;
       password: req.body.password,
       status: false,
 lastUpdate: local,
+dateRegister: local,
       light: {
         red: lightStatus,
         green: lightStatus,
