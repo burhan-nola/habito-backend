@@ -23,7 +23,7 @@ exports.login = async (req, res) => {
     const { idDevice, password } = req.body;
     const data = await deviceModel.findOne({ idDevice: idDevice });
     // const cekPassword = await deviceModel.findOne({ password: password });
-    if (!data || data.password != password) {
+    if (!data) {
       return res
         .status(400)
         .json({ message: "user dosen't exist or wrong password" });
