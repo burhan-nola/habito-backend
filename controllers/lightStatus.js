@@ -24,3 +24,20 @@ exports.light = async (req, res) => {
     res.status(500).json(error);
   }
 };
+
+exports.getLight = async (req, res) => {
+  try {
+    const data = await deviceModel.findOne({ idDevice: req.query.id });
+    const light = data.light;
+
+    const result = {};
+    for (const color in light) {
+      if (light[color].length > 0) {
+        result[color] = light[color][light[color].length - 1];
+      }
+    }
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};

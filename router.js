@@ -10,14 +10,15 @@ router.get("/try", logStatus.try);
 router.get("/logs", logStatus.logs);
 router.get("/offline", logStatus.offline);
 router.get("/register", logStatus.register);
-router.get("/cek", auth, logStatus.cekStatus);
 router.get("/keep-online", logStatus.alwaysOnline);
 
 //light status
 router.get("/light", lightStatus.light);
+router.get("/light-status", lightStatus.getLight);
 
 //web
 router.post("/register-user", account.register);
 router.post("/login", account.login);
+router.get("/cek", auth, logStatus.cekStatus);
 
 module.exports = router;
