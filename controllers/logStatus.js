@@ -138,13 +138,13 @@ exports.cekStatus = async (req, res) => {
 exports.alwaysOnline = async (req, res) => {
   try {
     const date = new Date();
-    const data = await deviceModel.findOne({ idDevice: req.query.id });
+    const data = await deviceModel.findOne({ idDevice: req.body.id });
     const lastStatus = data.logs[data.logs.length - 1].status;
     if (!lastStatus) {
       const logData = {
         status: true,
-        ipAddres: req.query.ip,
-        SSID: req.query.ssid,
+        ipAddres: req.body.ip,
+        SSID: req.body.ssid,
         date: date,
       };
       data.logs.push(logData);

@@ -10,7 +10,7 @@ router.get("/try", logStatus.try);
 router.get("/logs", logStatus.logs);
 router.get("/offline", logStatus.offline);
 router.get("/register", logStatus.register);
-router.get("/keep-online", logStatus.alwaysOnline);
+router.post("/keep-online", logStatus.alwaysOnline);
 
 //light status
 router.get("/light", lightStatus.light);

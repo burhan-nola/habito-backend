@@ -81,6 +81,15 @@ void logs() {
 }
 
 bool online() {
+  StaticJsonDocument<200> jsonDoc;
+  jsonDoc["idDevice"] = idDevice;
+  jsonDoc["SSID"] = SSID;
+  jsonDoc["ipAddress"] = WiFi.localIP();
+
+  // Serialize the JSON document to a string
+  String jsonString;
+  serializeJson(jsonDoc, jsonString);
+  
     WiFiClientSecure client;
     client.setInsecure();
 
@@ -88,17 +97,18 @@ bool online() {
     String endpoint = "/keep-online";
     String id = "?id=";
     String QipAddress = "&ip=";
-//    String ipAddress = WiFi.localIP();
+    IPAddress ipAddress = WiFi.localIP();
+    String ip = ipAddress.toString();
     String Qssid = "&ssid=";
     String ssid = SSID;
 
-    String fullUrl = url + endpoint + id + idDevice + Qssid + ssid;
+    String fullUrl = url + endpoint;
 
     Serial.print("Requesting: ");
     Serial.println(fullUrl);
 
     if (https.begin(client, fullUrl)) {
-        int httpCode = https.GET();
+        int httpCode = https.POST(jsonString);
         Serial.print("HTTP Response Code: ");
         Serial.println(httpCode);
         
