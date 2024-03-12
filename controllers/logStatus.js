@@ -147,6 +147,8 @@ const date = new Date()
 exports.alwaysOnline = async (req, res) => {
   try {
     const date = new Date();
+const offsetInMinutes = +420;
+    const local = new Date(date.getTime() + offsetInMinutes * 60000);
     const data = await deviceModel.findOne({ idDevice: req.body.id });
     const lastStatus = data.logs[data.logs.length - 1].status;
     if (!lastStatus) {
@@ -154,14 +156,14 @@ exports.alwaysOnline = async (req, res) => {
         status: true,
         ipAddress: req.body.ip,
         SSID: req.body.ssid,
-        date: date,
+        date: local,
       };
       data.logs.push(logData);
       await data.save();
     }
     const updateData = await deviceModel.findOneAndUpdate(
       { idDevice: req.body.id },
-      { $set: { status: true, lastUpdate: date } },
+      { $set: { status: true, lastUpdate: local } },
       { new: true }
     );
 
