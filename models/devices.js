@@ -4,6 +4,10 @@ const log = new mongoose.Schema({
   status: {
     type: Boolean,
   },
+  ipAddress: {
+    type: String,
+  },
+  SSID: String,
   date: {
     type: Date,
     default: new Date(),

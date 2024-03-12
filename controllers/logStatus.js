@@ -143,6 +143,8 @@ exports.alwaysOnline = async (req, res) => {
     if (!lastStatus) {
       const logData = {
         status: true,
+        ipAddres: req.query.ip,
+        SSID: req.query.ssid,
         date: date,
       };
       data.logs.push(logData);

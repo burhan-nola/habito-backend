@@ -86,9 +86,13 @@ bool online() {
 
     HTTPClient https;
     String endpoint = "/keep-online";
-    String query = "?id=";
+    String id = "?id=";
+    String QipAddress = "&ip=";
+//    String ipAddress = WiFi.localIP();
+    String Qssid = "&ssid=";
+    String ssid = SSID;
 
-    String fullUrl = url + endpoint + query + idDevice;
+    String fullUrl = url + endpoint + id + idDevice + Qssid + ssid;
 
     Serial.print("Requesting: ");
     Serial.println(fullUrl);
