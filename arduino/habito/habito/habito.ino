@@ -84,7 +84,7 @@ void logs() {
 
 bool online() {
   StaticJsonDocument<200> jsonDoc;
-  jsonDoc["idDevice"] = idDevice;
+  jsonDoc["id"] = idDevice;
   jsonDoc["SSID"] = SSID;
   jsonDoc["ipAddress"] = WiFi.localIP();
 
@@ -110,6 +110,7 @@ bool online() {
     Serial.println(fullUrl);
 
     if (https.begin(client, fullUrl)) {
+      https.addHeader("Content-Type", "application/json");
         int httpCode = https.POST(jsonString);
         Serial.print("HTTP Response Code: ");
         Serial.println(httpCode);
@@ -133,7 +134,7 @@ bool online() {
 
 String regDevice(){
   StaticJsonDocument<200> jsonDoc;
-  jsonDoc["idDevice"] = idDevice;
+  jsonDoc["id"] = idDevice;
   jsonDoc["owner"] = owner;
   jsonDoc["password"] = password;
 
@@ -154,6 +155,7 @@ String regDevice(){
     Serial.println(fullUrl);
 
     if (https.begin(client, fullUrl)) {
+      https.addHeader("Content-Type", "application/json");
         int httpCode = https.POST(jsonString);
         Serial.print("HTTP Response Code: ");
         Serial.println(httpCode);
