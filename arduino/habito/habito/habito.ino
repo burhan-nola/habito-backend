@@ -83,10 +83,13 @@ void logs() {
 }
 
 bool online() {
+  IPAddress ipAddress = WiFi.localIP();
+  String ip = ipAddress.toString();
+  
   StaticJsonDocument<200> jsonDoc;
   jsonDoc["id"] = idDevice;
+  jsonDoc["ip"] = ip;
   jsonDoc["ssid"] = SSID;
-  jsonDoc["ip"] = WiFi.localIP();
 
   // Serialize the JSON document to a string
   String jsonString;
@@ -97,12 +100,6 @@ bool online() {
 
     HTTPClient https;
     String endpoint = "/keep-online";
-    String id = "?id=";
-    String QipAddress = "&ip=";
-    IPAddress ipAddress = WiFi.localIP();
-    String ip = ipAddress.toString();
-    String Qssid = "&ssid=";
-    String ssid = SSID;
 
     String fullUrl = url + endpoint;
 

@@ -153,7 +153,7 @@ exports.alwaysOnline = async (req, res) => {
       await data.save();
     }
     const updateData = await deviceModel.findOneAndUpdate(
-      { idDevice: req.query.id },
+      { idDevice: req.body.id },
       { $set: { status: true, lastUpdate: date } },
       { new: true }
     );
