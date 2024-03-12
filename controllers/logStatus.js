@@ -4,8 +4,8 @@ const accountModel = require("../models/accounts.js");
 
 exports.try = async (req, res) => {
   try {
-    console.log("permintaan berhasil");
-    res.status(200).json([{ message: "hai" }]);
+const data = await deviceModel.findOne({idDevice: req.query.id})
+    res.status(200).json(data);
   } catch (error) {
     res.status(500).json(error);
   }
