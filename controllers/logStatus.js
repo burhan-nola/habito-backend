@@ -97,18 +97,19 @@ exports.offline = async (req, res) => {
 exports.cekStatus = async (req, res) => {
   try {
     const data = await deviceModel.findOne({ idDevice: req.query.id });
-    // const user = await accountModel.findOne({ idDevice: req.query.id });
 
     const lastUpdate = data.lastUpdate;
     const thisTime = new Date();
     const elapseTime = thisTime - lastUpdate;
     const second = Math.round(elapseTime / 1000);
 
+    const offsetInMinutes = +420;
+    const local = new Date(lastUpdate.getTime() + offsetInMinutes * 60000);
     const sendData = {
       idDevice: data.idDevice,
       owner: data.owner,
       status: data.status,
-      lastUpdate: data.lastUpdate,
+      lastUpdate: local,
       logs: data.logs[data.logs.length - 1],
     };
 
