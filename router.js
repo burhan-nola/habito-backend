@@ -6,7 +6,7 @@ const auth = require("./middleware.js");
 
 const router = express.Router();
 
-router.get("/try", logStatus.try);
+router.post("/try", logStatus.try);
 router.post("/logs", logStatus.logs);
 router.get("/offline", logStatus.offline);
 router.post("/register", logStatus.register);
