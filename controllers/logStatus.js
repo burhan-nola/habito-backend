@@ -122,7 +122,7 @@ exports.cekStatus = async (req, res) => {
           { $set: { status: false, lastUpdate: thisTime - elapseTime } },
           { new: true }
         )
-        .select({ idDevice: 1, status: 1, owner: 1, lastUpdate: 1 });
+        .select({ idDevice: 1, status: 1, owner: 1, lastUpdate: 1, logs: 1 });
       const logData = {
         status: false,
         date: updateData.lastUpdate,
