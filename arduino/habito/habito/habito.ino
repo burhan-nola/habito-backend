@@ -85,8 +85,8 @@ void logs() {
 bool online() {
   StaticJsonDocument<200> jsonDoc;
   jsonDoc["id"] = idDevice;
-  jsonDoc["SSID"] = SSID;
-  jsonDoc["ipAddress"] = WiFi.localIP();
+  jsonDoc["ssid"] = SSID;
+  jsonDoc["ip"] = WiFi.localIP();
 
   // Serialize the JSON document to a string
   String jsonString;
