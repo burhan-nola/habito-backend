@@ -109,6 +109,7 @@ exports.cekStatus = async (req, res) => {
       owner: data.owner,
       status: data.status,
       lastUpdate: data.lastUpdate,
+      logs: data.logs,
     };
 
     if (!data.status) {
