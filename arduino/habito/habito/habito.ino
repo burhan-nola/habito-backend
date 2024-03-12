@@ -7,6 +7,8 @@ const char* SSID = "NOLA 37G";
 const char* PASS = "12345678";
 String idDevice = "habito_001"; //change this based on the device id
 String url = "https://habito-api.vercel.app"; //this is the API url
+String owner = "Habito Nola";
+String password = "12345";
 
 void setup() {  
   Serial.begin(115200);
@@ -130,6 +132,15 @@ bool online() {
 }
 
 String regDevice(){
+  StaticJsonDocument<200> jsonDoc;
+  jsonDoc["idDevice"] = idDevice;
+  jsonDoc["owner"] = owner;
+  jsonDoc["password"] = password;
+
+  // Serialize the JSON document to a string
+  String jsonString;
+  serializeJson(jsonDoc, jsonString);
+  
     WiFiClientSecure client;
     client.setInsecure();
 
@@ -137,13 +148,13 @@ String regDevice(){
     String endpoint = "/register";
     String query = "?id=";
 
-    String fullUrl = url + endpoint + query + idDevice;
+    String fullUrl = url + endpoint;
 
     Serial.print("Requesting: ");
     Serial.println(fullUrl);
 
     if (https.begin(client, fullUrl)) {
-        int httpCode = https.GET();
+        int httpCode = https.POST(jsonString);
         Serial.print("HTTP Response Code: ");
         Serial.println(httpCode);
         

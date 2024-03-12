@@ -13,7 +13,7 @@ exports.try = async (req, res) => {
 
 exports.register = async (req, res) => {
   try {
-    const idDevice = req.query.id;
+    const idDevice = req.body.id;
     const cekID = await deviceModel.findOne({ idDevice: idDevice });
     if (cekID) {
       return res.status(400).json({ message: "Device already registered" });
@@ -23,8 +23,8 @@ exports.register = async (req, res) => {
     };
     const data = {
       idDevice: idDevice,
-      owner: req.query.owner,
-      password: req.query.password,
+      owner: req.body.owner,
+      password: req.body.password,
       status: false,
       light: {
         red: lightStatus,
@@ -55,6 +55,8 @@ exports.logs = async (req, res) => {
     );
     const logData = {
       status: true,
+      ipAddress: null,
+      SSID: null,
       date: updateData.lastUpdate,
     };
     cekID.logs.push(logData);
@@ -143,8 +145,8 @@ exports.alwaysOnline = async (req, res) => {
     if (!lastStatus) {
       const logData = {
         status: true,
-        ipAddres: req.body.ip,
-        SSID: req.body.ssid,
+        ipAddress: req.body.ip,
+        // SSID: req.body.ssid,
         date: date,
       };
       data.logs.push(logData);

@@ -7,7 +7,9 @@ const log = new mongoose.Schema({
   ipAddress: {
     type: String,
   },
-  SSID: String,
+  SSID: {
+    type: String,
+  },
   date: {
     type: Date,
     default: new Date(),
@@ -28,9 +30,11 @@ const device = new mongoose.Schema({
   },
   password: {
     type: String,
+    required: true,
   },
   owner: {
     type: String,
+    required: true,
   },
   status: {
     type: Boolean,
