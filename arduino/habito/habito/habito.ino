@@ -51,6 +51,18 @@ void connectWiFi() {
 }
 
 void logs() {
+  IPAddress ipAddress = WiFi.localIP();
+  String ip = ipAddress.toString();
+  
+  StaticJsonDocument<200> jsonDoc;
+  jsonDoc["id"] = idDevice;
+  jsonDoc["ip"] = ip;
+  jsonDoc["ssid"] = SSID;
+
+  // Serialize the JSON document to a string
+  String jsonString;
+  serializeJson(jsonDoc, jsonString);
+  
     WiFiClientSecure client;
     client.setInsecure();
 
@@ -59,13 +71,14 @@ void logs() {
     String endpoint = "/logs";
     String query = "?id=";
 
-    String fullUrl = url + endpoint + query + idDevice;
+    String fullUrl = url + endpoint;
     
     Serial.print("Requesting: ");
     Serial.println(fullUrl);
     
     if (https.begin(client, fullUrl)) {
-        int httpCode = https.GET();
+      https.addHeader("Content-Type", "application/json");
+        int httpCode = https.POST(jsonString);
         Serial.print("HTTP Response Code: ");
         Serial.println(httpCode);
         if (httpCode > 0) {

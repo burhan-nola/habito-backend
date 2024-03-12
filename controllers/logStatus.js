@@ -43,7 +43,7 @@ exports.register = async (req, res) => {
 
 exports.logs = async (req, res) => {
   try {
-    const id = req.query.id;
+    const id = req.body.id;
     const cekID = await deviceModel.findOne({ idDevice: id });
     if (!cekID) {
       return res.status(400).json({ error: "id not found" });
@@ -55,8 +55,8 @@ exports.logs = async (req, res) => {
     );
     const logData = {
       status: true,
-      ipAddress: null,
-      SSID: null,
+      ipAddress: req.body.ip,
+      SSID: req.body.ssid,
       date: updateData.lastUpdate,
     };
     cekID.logs.push(logData);
