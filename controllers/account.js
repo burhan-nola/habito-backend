@@ -20,7 +20,7 @@ exports.register = async (req, res) => {
 
 exports.login = async (req, res) => {
   try {
-    const { idDevice, password } = req.body;
+    const { id, password } = req.body;
     const data = await deviceModel.findOne({ idDevice: idDevice });
     // const cekPassword = await deviceModel.findOne({ password: password });
     if (!data) {
