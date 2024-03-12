@@ -23,6 +23,7 @@ const offsetInMinutes = +420;
     }
     const lightStatus = {
       status: false,
+date: local,
     };
     const data = {
       idDevice: idDevice,
