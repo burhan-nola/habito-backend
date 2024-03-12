@@ -48,9 +48,12 @@ exports.logs = async (req, res) => {
     if (!cekID) {
       return res.status(400).json({ error: "id not found" });
     }
+const date = new Date()
+const offsetInMinutes = +420;
+    const local = new Date(date.getTime() + offsetInMinutes * 60000);
     const updateData = await deviceModel.findOneAndUpdate(
       { idDevice: id },
-      { $set: { status: true, lastUpdate: new Date() } },
+      { $set: { status: true, lastUpdate: local} },
       { new: true }
     );
     const logData = {
@@ -96,20 +99,22 @@ exports.offline = async (req, res) => {
 
 exports.cekStatus = async (req, res) => {
   try {
+const offsetInMinutes = +420;
     const data = await deviceModel.findOne({ idDevice: req.query.id });
 
     const lastUpdate = data.lastUpdate;
-    const thisTime = new Date();
+const date = new Date()
+    const thisTime = new Date(date.getTime() + offsetInMinutes * 60000);
     const elapseTime = thisTime - lastUpdate;
     const second = Math.round(elapseTime / 1000);
 
-    const offsetInMinutes = +420;
+    
     const local = new Date(lastUpdate.getTime() + offsetInMinutes * 60000);
     const sendData = {
       idDevice: data.idDevice,
       owner: data.owner,
       status: data.status,
-      lastUpdate: local,
+      lastUpdate: lastUpdate,
       logs: data.logs[data.logs.length - 1],
     };
 
