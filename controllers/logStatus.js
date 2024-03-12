@@ -13,6 +13,9 @@ exports.try = async (req, res) => {
 
 exports.register = async (req, res) => {
   try {
+const date = new Date()
+const offsetInMinutes = +420;
+    const local = new Date(date.getTime() + offsetInMinutes * 60000);
     const idDevice = req.body.id;
     const cekID = await deviceModel.findOne({ idDevice: idDevice });
     if (cekID) {
@@ -26,6 +29,7 @@ exports.register = async (req, res) => {
       owner: req.body.owner,
       password: req.body.password,
       status: false,
+lastUpdate: local,
       light: {
         red: lightStatus,
         green: lightStatus,
