@@ -1,3 +1,4 @@
+const { filterLightByDate } = require("../functions/filterLight.js");
 const deviceModel = require("../models/devices.js");
 
 exports.light = async (req, res) => {
@@ -40,6 +41,36 @@ exports.getLight = async (req, res) => {
       }
     }
     res.status(200).json(result);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+exports.filterLight = async (req, res) => {
+  try {
+    const date = new Date();
+    const offsetInMinutes = +420;
+    const local = new Date(date.getTime() + offsetInMinutes * 60000);
+    const tanggal = local.toISOString().split("T")[0];
+
+    const data = await deviceModel.findOne({ idDevice: req.query.id });
+    const dataLight = JSON.stringify(data.light);
+    const parseLight = JSON.parse(dataLight);
+
+    function filterByDate(parseLight, date) {
+      for (let color in parseLight) {
+        if (Array.isArray(parseLight[color])) {
+          parseLight[color] = parseLight[color].filter(
+            (obj) => new Date(obj.date).toISOString().slice(0, 10) === date
+          );
+        }
+      }
+      return parseLight;
+    }
+
+    const filteredData = filterByDate(parseLight, tanggal);
+
+    res.status(200).json(filteredData);
   } catch (error) {
     res.status(500).json(error);
   }

@@ -15,9 +15,9 @@ router.post("/keep-online", logStatus.alwaysOnline);
 //light status
 router.get("/light", lightStatus.light);
 router.get("/light-status", lightStatus.getLight);
+router.get("/filter-light", lightStatus.filterLight);
 
 //web
-// router.post("/register-user", account.register);
 router.post("/login", account.login);
 router.get("/cek", auth, logStatus.cekStatus);
 
