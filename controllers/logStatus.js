@@ -4,7 +4,7 @@ const accountModel = require("../models/accounts.js");
 
 exports.try = async (req, res) => {
   try {
-const data = await deviceModel.findOne({idDevice: req.body.id})
+    const data = await deviceModel.findOne({ idDevice: req.body.id });
     res.status(200).json(data);
   } catch (error) {
     res.status(500).json(error);
@@ -13,33 +13,30 @@ const data = await deviceModel.findOne({idDevice: req.body.id})
 
 exports.register = async (req, res) => {
   try {
-const date = new Date()
-const offsetInMinutes = +420;
+    const date = new Date();
+    const offsetInMinutes = +420;
     const local = new Date(date.getTime() + offsetInMinutes * 60000);
-    const idDevice = req.body.id;
-    const cekID = await deviceModel.findOne({ idDevice: idDevice });
-    if (cekID) {
+
+    const data = await deviceModel.findOne({ idDevice: req.body.id });
+    if (data) {
       return res.status(400).json({ message: "Device already registered" });
     }
     const lightStatus = {
-      status: false,
-date: local,
+      date: local,
     };
-    const data = {
-      idDevice: idDevice,
-      owner: req.body.owner,
-      password: req.body.password,
-      status: false,
-lastUpdate: local,
-dateRegister: local,
+    const dataSend = {
+      idDevice: req.body.id,
+      lastUpdate: local,
+      dateRegister: local,
       light: {
         red: lightStatus,
         green: lightStatus,
         blue: lightStatus,
         yellow: lightStatus,
       },
+      logs: [{ date: local }],
     };
-    const save = new deviceModel(data);
+    const save = new deviceModel(dataSend);
     await save.save();
     res.status(200).json({ message: "device registered", save });
   } catch (error) {
@@ -54,12 +51,12 @@ exports.logs = async (req, res) => {
     if (!cekID) {
       return res.status(400).json({ error: "id not found" });
     }
-const date = new Date()
-const offsetInMinutes = +420;
+    const date = new Date();
+    const offsetInMinutes = +420;
     const local = new Date(date.getTime() + offsetInMinutes * 60000);
     const updateData = await deviceModel.findOneAndUpdate(
       { idDevice: id },
-      { $set: { status: true, lastUpdate: local} },
+      { $set: { status: true, lastUpdate: local } },
       { new: true }
     );
     const logData = {
@@ -105,16 +102,15 @@ exports.offline = async (req, res) => {
 
 exports.cekStatus = async (req, res) => {
   try {
-const offsetInMinutes = +420;
+    const offsetInMinutes = +420;
     const data = await deviceModel.findOne({ idDevice: req.query.id });
 
     const lastUpdate = data.lastUpdate;
-const date = new Date()
+    const date = new Date();
     const thisTime = new Date(date.getTime() + offsetInMinutes * 60000);
     const elapseTime = thisTime - lastUpdate;
     const second = Math.round(elapseTime / 1000);
 
-    
     const local = new Date(lastUpdate.getTime() + offsetInMinutes * 60000);
     const sendData = {
       idDevice: data.idDevice,
@@ -153,7 +149,7 @@ const date = new Date()
 exports.alwaysOnline = async (req, res) => {
   try {
     const date = new Date();
-const offsetInMinutes = +420;
+    const offsetInMinutes = +420;
     const local = new Date(date.getTime() + offsetInMinutes * 60000);
     const data = await deviceModel.findOne({ idDevice: req.body.id });
     const lastStatus = data.logs[data.logs.length - 1].status;

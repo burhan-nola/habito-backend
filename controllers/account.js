@@ -4,20 +4,6 @@ const deviceModel = require("../models/devices.js");
 
 require("dotenv").config();
 
-exports.register = async (req, res) => {
-  try {
-    const cek = await accountModel.findOne({ deviceID: req.body.deviceID });
-    if (cek) {
-      return res.status(401).json({ message: "user sudah terdaftar" });
-    }
-    const data = new accountModel(req.body);
-    await data.save();
-    res.status(201).json({ message: "user registered", data });
-  } catch (error) {
-    res.status(500).json(error);
-  }
-};
-
 exports.login = async (req, res) => {
   try {
     const { id, password } = req.body;

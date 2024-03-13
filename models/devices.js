@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const log = new mongoose.Schema({
   status: {
     type: Boolean,
+    defalut: false,
   },
   ipAddress: {
     type: String,
@@ -12,15 +13,23 @@ const log = new mongoose.Schema({
   },
   date: {
     type: Date,
-    default: new Date(),
   },
 });
 
+const lightStatus = new mongoose.Schema({
+  status: {
+    type: Boolean,
+    defalut: false,
+  },
+  date: {
+    type: Date,
+  },
+});
 const light = new mongoose.Schema({
-  red: [log],
-  green: [log],
-  blue: [log],
-  yellow: [log],
+  red: [lightStatus],
+  green: [lightStatus],
+  blue: [lightStatus],
+  yellow: [lightStatus],
 });
 
 const device = new mongoose.Schema({
@@ -32,21 +41,22 @@ const device = new mongoose.Schema({
   password: {
     type: String,
     required: true,
+    default: "",
   },
   owner: {
     type: String,
     required: true,
+    default: "",
   },
   status: {
     type: Boolean,
+    default: false,
   },
   lastUpdate: {
     type: Date,
-    default: new Date(),
   },
   dateRegister: {
     type: Date,
-    default: new Date(),
   },
   logs: [log],
   light: light,
