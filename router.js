@@ -17,7 +17,7 @@ router.get("/light", lightStatus.light);
 router.get("/light-status", lightStatus.getLight);
 
 //web
-router.post("/register-user", account.register);
+// router.post("/register-user", account.register);
 router.post("/login", account.login);
 router.get("/cek", auth, logStatus.cekStatus);
 
