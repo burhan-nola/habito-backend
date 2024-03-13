@@ -10,6 +10,7 @@ String url = "https://habito-api.vercel.app"; //this is the API url
 
 void setup() {  
   Serial.begin(115200);
+  delay(5000);
   connectWiFi(); //function to connect WiFi
   regDevice(); //function to register device when device start
   logs(); //function to change device status (online)

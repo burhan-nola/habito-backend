@@ -4,13 +4,16 @@ exports.light = async (req, res) => {
   try {
     const light = req.query.light;
     const date = new Date();
+    const offsetInMinutes = +420;
+    const local = new Date(date.getTime() + offsetInMinutes * 60000);
+
     const data = await deviceModel.findOne({ idDevice: req.query.id });
     const lightData = data.light[light];
     const lastStatus = lightData[lightData.length - 1];
     if (!lastStatus.status) {
       const updateData = {
         status: true,
-        date: date,
+        date: local,
       };
 
       lightData.push(updateData);
