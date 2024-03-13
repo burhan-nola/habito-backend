@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const log = new mongoose.Schema({
   status: {
     type: Boolean,
-    defalut: false,
+    default: false,
   },
   ipAddress: {
     type: String,
@@ -19,7 +19,7 @@ const log = new mongoose.Schema({
 const lightStatus = new mongoose.Schema({
   status: {
     type: Boolean,
-    defalut: false,
+    default: false,
   },
   date: {
     type: Date,
