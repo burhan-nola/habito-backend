@@ -36,8 +36,14 @@ exports.getLight = async (req, res) => {
 
     const result = {};
     for (const color in light) {
-      if (light[color].length > 0) {
-        result[color] = light[color][light[color].length - 1];
+      if (Array.isArray(light[color])) {
+        // Check if the color data is not empty
+        if (light[color].length > 0) {
+          result[color] = light[color][light[color].length - 1];
+        } else {
+          // If color data is empty, set status to false
+          result[color] = { status: false };
+        }
       }
     }
     res.status(200).json(result);
