@@ -1,4 +1,3 @@
-const { filterLightByDate } = require("../functions/filterLight.js");
 const deviceModel = require("../models/devices.js");
 
 exports.light = async (req, res) => {
