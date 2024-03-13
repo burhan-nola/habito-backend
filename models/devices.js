@@ -40,12 +40,10 @@ const device = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
     default: "",
   },
   owner: {
     type: String,
-    required: true,
     default: "",
   },
   status: {

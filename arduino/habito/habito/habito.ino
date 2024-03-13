@@ -7,8 +7,6 @@ const char* SSID = "NOLA 37G";
 const char* PASS = "12345678";
 String idDevice = "habito_001"; //change this based on the device id
 String url = "https://habito-api.vercel.app"; //this is the API url
-String owner = "Habito Nola";
-String password = "12345";
 
 void setup() {  
   Serial.begin(115200);
@@ -145,8 +143,6 @@ bool online() {
 String regDevice(){
   StaticJsonDocument<200> jsonDoc;
   jsonDoc["id"] = idDevice;
-  jsonDoc["owner"] = owner;
-  jsonDoc["password"] = password;
 
   // Serialize the JSON document to a string
   String jsonString;
