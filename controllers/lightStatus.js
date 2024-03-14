@@ -96,3 +96,13 @@ exports.filterLight = async (req, res) => {
     res.status(500).json(error);
   }
 };
+
+exports.detailTask = async (req, res) => {
+  try {
+    const data = await deviceModel.findOne({ idDevice: req.query.id });
+    const detailTask = data.detailLight;
+    res.status(200).json(detailTask);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};

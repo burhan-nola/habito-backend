@@ -34,6 +34,7 @@ exports.register = async (req, res) => {
         yellow: lightStatus,
       },
       logs: [{ date: local }],
+      detailLight: {},
     };
     const save = new deviceModel(dataSend);
     await save.save();

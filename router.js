@@ -17,6 +17,7 @@ router.get("/clear-logs", logStatus.clearLogs);
 router.get("/light", lightStatus.light);
 router.get("/light-status", lightStatus.getLight);
 router.get("/filter-light", lightStatus.filterLight);
+router.get("/detail-task", lightStatus.detailTask);
 
 //web
 router.post("/login", account.login);
