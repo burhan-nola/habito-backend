@@ -11,6 +11,7 @@ router.post("/logs", logStatus.logs);
 router.get("/offline", logStatus.offline);
 router.post("/register", logStatus.register);
 router.post("/keep-online", logStatus.alwaysOnline);
+router.get("/clear-logs", logStatus.clearLogs);
 
 //light status
 router.get("/light", lightStatus.light);

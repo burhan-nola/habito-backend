@@ -151,7 +151,8 @@ exports.alwaysOnline = async (req, res) => {
     const offsetInMinutes = +420;
     const local = new Date(date.getTime() + offsetInMinutes * 60000);
     const data = await deviceModel.findOne({ idDevice: req.body.id });
-    const lastStatus = data.logs[data.logs.length - 1].status;
+    const lastStatus =
+      data.logs.length > 0 ? data.logs[data.logs.length - 1].status : false;
     if (!lastStatus) {
       const logData = {
         status: true,
@@ -171,6 +172,17 @@ exports.alwaysOnline = async (req, res) => {
     res
       .status(200)
       .json({ message: updateData.status, lastStatus: lastStatus });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
+
+exports.clearLogs = async (req, res) => {
+  try {
+    const data = await deviceModel.findOneAndUpdate({ idDevice: req.query.id });
+    data.logs = [];
+    await data.save();
+    res.status(200).json(data.logs);
   } catch (error) {
     res.status(500).json(error);
   }

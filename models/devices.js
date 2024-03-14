@@ -25,11 +25,31 @@ const lightStatus = new mongoose.Schema({
     type: Date,
   },
 });
+
 const light = new mongoose.Schema({
   red: [lightStatus],
   green: [lightStatus],
   blue: [lightStatus],
   yellow: [lightStatus],
+});
+
+const detailLight = new mongoose.Schema({
+  red: {
+    type: String,
+    default: "",
+  },
+  green: {
+    type: String,
+    default: "",
+  },
+  blue: {
+    type: String,
+    default: "",
+  },
+  yellow: {
+    type: String,
+    default: "",
+  },
 });
 
 const device = new mongoose.Schema({
@@ -58,6 +78,7 @@ const device = new mongoose.Schema({
   },
   logs: [log],
   light: light,
+  detailLight: detailLight,
 });
 
 module.exports = mongoose.model("device", device);
