@@ -24,3 +24,14 @@ exports.login = async (req, res) => {
     res.status(500).json(error);
   }
 };
+
+exports.getUser = async (req, res) => {
+  try {
+    const data = await deviceModel
+      .findOne({ idDevice: req.query.id })
+      .select({ owner: 1, password: 1 });
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};

@@ -20,5 +20,6 @@ router.get("/filter-light", lightStatus.filterLight);
 //web
 router.post("/login", account.login);
 router.get("/cek", auth, logStatus.cekStatus);
+router.get("/user", account.getUser);
 
 module.exports = router;
