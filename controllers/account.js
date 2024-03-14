@@ -35,3 +35,16 @@ exports.getUser = async (req, res) => {
     res.status(500).json(error);
   }
 };
+
+exports.editData = async (req, res) => {
+  try {
+    const update = await deviceModel.findOneAndUpdate(
+      { idDevice: req.query.id },
+      { $set: req.body },
+      { new: true }
+    );
+    res.status(200).json(update);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
