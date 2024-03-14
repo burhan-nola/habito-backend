@@ -6,13 +6,15 @@ exports.light = async (req, res) => {
     const date = new Date();
     const offsetInMinutes = +420;
     const local = new Date(date.getTime() + offsetInMinutes * 60000);
+    const tanggal = local.toISOString().split("T")[0];
 
     const data = await deviceModel.findOne({ idDevice: req.query.id });
     const lightData = data.light[light];
     const lastStatus =
       lightData.length > 0 ? lightData[lightData.length - 1] : [];
+    const convert = lastStatus.date.toISOString().split("T")[0];
 
-    if (!lastStatus.status) {
+    if (convert !== tanggal || lastStatus.length === 0) {
       const updateData = {
         status: true,
         date: local,
@@ -24,7 +26,7 @@ exports.light = async (req, res) => {
         .status(201)
         .json({ message: `${light} light is on`, data: updateData });
     }
-    res.status(200).json(lastStatus);
+    res.status(200).json(convert);
   } catch (error) {
     res.status(500).json(error);
   }
