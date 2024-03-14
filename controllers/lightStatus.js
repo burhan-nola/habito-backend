@@ -12,21 +12,21 @@ exports.light = async (req, res) => {
     const lightData = data.light[light];
     const lastStatus =
       lightData.length > 0 ? lightData[lightData.length - 1] : [];
-    if (lastStatus.length === 0) {
-      const updateData = {
-        status: true,
-        date: local,
-      };
+    // if (lastStatus.length === 0) {
+    //   const updateData = {
+    //     status: true,
+    //     date: local,
+    //   };
 
-      lightData.push(updateData);
-      await data.save();
-      return res
-        .status(201)
-        .json({ message: `${light} light is on`, data: updateData });
-    }
+    //   lightData.push(updateData);
+    //   await data.save();
+    //   return res
+    //     .status(201)
+    //     .json({ message: `${light} light is on`, data: updateData });
+    // }
     const convert = lastStatus.date.toISOString().split("T")[0];
 
-    if (convert !== tanggal) {
+    if (convert !== tanggal || !lastStatus.status) {
       const updateData = {
         status: true,
         date: local,
