@@ -18,6 +18,7 @@ router.get("/light", lightStatus.light);
 router.get("/light-status", lightStatus.getLight);
 router.get("/filter-light", lightStatus.filterLight);
 router.get("/detail-task", lightStatus.detailTask);
+router.post("/edit-task", lightStatus.editTask);
 
 //web
 router.post("/login", account.login);

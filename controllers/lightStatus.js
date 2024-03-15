@@ -106,3 +106,22 @@ exports.detailTask = async (req, res) => {
     res.status(500).json(error);
   }
 };
+
+exports.editTask = async (req, res) => {
+  try {
+    const data = await deviceModel.findOne({ idDevice: req.query.id });
+    const { task1, task2, task3, task4 } = req.body;
+    const updateTask = {
+      red: task1,
+      green: task2,
+      blue: task3,
+      yellow: task4,
+    };
+
+    data.detailLight = updateTask;
+    await data.save();
+    res.status(200).json({ message: "task updated" });
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
