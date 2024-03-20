@@ -425,8 +425,31 @@ void filterLight(){
         if (httpCode > 0) {
           DynamicJsonDocument doc(1024);
           deserializeJson(doc, https.getString());
-//          String message = doc["message"];
-            Serial.println(doc["green"]["status"].as<int>());
+            int redStatus = doc["red"]["status"].as<int>();
+            int greenStatus = doc["green"]["status"].as<int>();
+            int blueStatus = doc["blue"]["status"].as<int>();
+            int yellowStatus = doc["yellow"]["status"].as<int>();
+            Serial.print(redStatus);
+            Serial.print(greenStatus);
+            Serial.print(blueStatus);
+            Serial.print(yellowStatus);
+            if(redStatus == 1){
+              EEPROM.write(address1, 2);
+              EEPROM.commit();
+            }
+            if(yellowStatus == 1){
+              EEPROM.write(address2, 2);
+              EEPROM.commit();
+            }
+            if(greenStatus == 1){
+              EEPROM.write(address3, 2);
+              EEPROM.commit();
+            }
+            if(blueStatus == 1){
+              EEPROM.write(address4, 2);
+              EEPROM.commit();
+            }
+            Serial.println();
         }
         https.end();
     } else {
@@ -452,15 +475,26 @@ void handleButton(){
     long pressDuration = releasedTime - pressedTime;
 
     if( pressDuration < SHORT_PRESS_TIME )
-      {filterLight();
-        Serial.println("A short press is detected");
-        Serial.println("read Eeprom");
+      { 
         EEPROM.write(address1, 2);
         EEPROM.write(address2, 2);
+        EEPROM.write(address3, 2);
+        EEPROM.write(address4, 2);
         EEPROM.commit();
         ledsign();
         EEPROM.write(address1, 0);
         EEPROM.write(address2, 0);
+        EEPROM.write(address3, 0);
+        EEPROM.write(address4, 0);
+        EEPROM.commit();
+        filterLight();
+        Serial.println("A short press is detected");
+        Serial.println("read Eeprom");
+        ledsign();
+        EEPROM.write(address1, 0);
+        EEPROM.write(address2, 0);
+        EEPROM.write(address3, 0);
+        EEPROM.write(address4, 0);
         EEPROM.commit();
       }
     if( pressDuration > SHORT_PRESS_TIME )
