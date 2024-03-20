@@ -5,20 +5,24 @@
 
 
 #include <ESP8266WiFi.h>
-#include <BlynkSimpleEsp8266.h>
+//#include <BlynkSimpleEsp8266.h>
 #include "Wire.h"
-#include "PN532_I2C.h"
-#include "PN532.h"
+//#include "PN532_I2C.h"
+//#include "PN532.h"
 #include <EEPROM.h>
+#include <ESP8266HTTPClient.h>
+#include <WiFiClientSecure.h>
+#include <ArduinoJson.h>
 
 
+char ssid[] = "NOLA 37G";
+char pass[] = "12345678";
+//char auth[] = BLYNK_AUTH_TOKEN;
+String idDevice = "habito_001"; //change this based on the device id
+String url = "https://habito-api.vercel.app"; //this is the API url
 
-char ssid[] = "Nola Priority";
-char pass[] = "CahayaUtara2020";
-char auth[] = BLYNK_AUTH_TOKEN;
-
-PN532_I2C pn532i2c(Wire);
-PN532 nfc(pn532i2c);
+//PN532_I2C pn532i2c(Wire);
+//PN532 nfc(pn532i2c);
 
 String userRFID = "";
 
@@ -36,7 +40,7 @@ const int BUTTON_PIN = D3;
 const int SHORT_PRESS_TIME = 1000; 
 
 // Variables will change:
-int lastState = LOW;
+int lastState = HIGH;
 int currentState;
 unsigned long pressedTime  = 0;
 unsigned long releasedTime = 0;
@@ -44,7 +48,7 @@ unsigned long releasedTime = 0;
 
 
 
-BlynkTimer timer;
+//BlynkTimer timer;
 
 
 
@@ -76,47 +80,369 @@ void setup() {
   pinMode(LED4,OUTPUT);
   pinMode(buton,INPUT);
   EEPROM.begin(512);
-  nfc.begin();
+//  nfc.begin();
 
-  uint32_t versiondata = nfc.getFirmwareVersion();
-  if (! versiondata) {
-    Serial.print("Didn't find PN53x board");
-    while (1); // halt
-  }
+//  uint32_t versiondata = nfc.getFirmwareVersion();
+//  if (! versiondata) {
+//    Serial.print("Didn't find PN53x board");
+//    while (1); // halt
+//  }
   // Got ok data, print it out!
-  Serial.print("Found chip PN5"); Serial.println((versiondata >> 24) & 0xFF, HEX);
-  Serial.print("Firmware ver. "); Serial.print((versiondata >> 16) & 0xFF, DEC);
-  Serial.print('.'); Serial.println((versiondata >> 8) & 0xFF, DEC);
+//  Serial.print("Found chip PN5"); Serial.println((versiondata >> 24) & 0xFF, HEX);
+//  Serial.print("Firmware ver. "); Serial.print((versiondata >> 16) & 0xFF, DEC);
+//  Serial.print('.'); Serial.println((versiondata >> 8) & 0xFF, DEC);
 
   //  Non-blocking procedure
-  nfc.setPassiveActivationRetries(0x01);
+//  nfc.setPassiveActivationRetries(0x01);
  
   // configure board to read RFID tags
-  nfc.SAMConfig();
+//  nfc.SAMConfig();
 
-  Serial.println("Waiting for an ISO14443A Card ...");
+//  Serial.println("Waiting for an ISO14443A Card ...");
 
 
   pinMode(LED_BUILTIN,OUTPUT);
    WiFi.begin(ssid, pass);
-  Blynk.begin(auth, ssid, pass);
+//  Blynk.begin(auth, ssid, pass);
+ 
   while (WiFi.status() != WL_CONNECTED)
   {
     Serial.print("."); 
-    delay(500);  
+    delay(500); 
+  EEPROM.write(address1, 2);
+  EEPROM.write(address2, 2);
+  EEPROM.write(address3, 2);
+  EEPROM.write(address4, 2);
+  EEPROM.commit();
+  ledsign(); 
   }
     Serial.println("Wifi Connected"); 
-
+    Serial.println("IP address: ");
+    Serial.println(WiFi.localIP());
+    regDevice();
+    logs();
+    EEPROM.write(address1, 0);
+  EEPROM.write(address2, 0);
+  EEPROM.write(address3, 0);
+  EEPROM.write(address4, 0);
+  EEPROM.commit();
+  ledsign();
 
 }
 
+unsigned long previousMillis = 0;
+
 void loop() {
-  Blynk.run();
-  timer.run();
-  readRFID();
+//  Blynk.run();
+//  timer.run();
+//  readRFID();
 
 
+handleOnline();
+handleButton();
+  
 
+}
+//void readRFID(void)
+//{
+//  boolean success;
+//  uint8_t uid[] = {0, 0, 0, 0, 0, 0, 0};
+//  uint8_t uidLength;
+//
+//  success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, &uid[0], &uidLength);
+//
+//  if (success)
+//  {
+//    for (uint8_t i = 0; i < uidLength; i++)
+//    {
+//      if (uid[i] <= 0xF) {
+//        userRFID += "0";
+//      }
+//      userRFID += String(uid[i] & 0xFF, HEX);
+//    }
+//    userRFID.toUpperCase();
+//    Serial.println(userRFID);
+//
+//    if(userRFID == "BECE816E")
+//    {
+//      Blynk.virtualWrite(V0, ">:|");
+//      Serial.println("kartu 1");
+//      Blynk.logEvent("led","says red");
+//      digitalWrite(led1,HIGH);
+//      EEPROM.write(address1, 2);
+//      EEPROM.commit();
+//      delay(1000);
+//      digitalWrite(led1,LOW);
+//      //ledsign();
+//    }
+//    
+//    if(userRFID == "BEE0806E")
+//    {
+//      Blynk.virtualWrite(V1, "YESSIR");
+//      Serial.println("kartu 2");
+//      Blynk.logEvent("led","says yellow");
+//      digitalWrite(led2,HIGH);
+//      EEPROM.write(address2, 2);
+//       EEPROM.commit();
+//      delay(1000);
+//      digitalWrite(led2,LOW);
+//     //ledsign(); 
+//    }
+//
+//    if(userRFID == "6EF18B6E")
+//    {
+//      Blynk.virtualWrite(V2, "YESSIR");
+//      Serial.println("kartu 3");
+//      digitalWrite(led3,HIGH);
+//      Blynk.logEvent("led","says green");
+//      EEPROM.write(address3, 2);
+//       EEPROM.commit();
+//      delay(1000);
+//      digitalWrite(led3,LOW);
+//     //ledsign(); 
+//    }
+//
+//    if(userRFID == "4E637F6E") 
+//    {
+//      Blynk.virtualWrite(V3, "YESSIR");
+//      Blynk.logEvent("led","says blue");
+//      Serial.println("kartu 4");
+//      digitalWrite(led4,HIGH);
+//      EEPROM.write(address4, 2);
+//       EEPROM.commit();
+//
+//      delay(1000);
+//      digitalWrite(led4,LOW);
+//     //ledsign(); 
+//    }
+//
+//    Serial.print( EEPROM.read(address1));
+//    Serial.print( EEPROM.read(address2));
+//    Serial.print( EEPROM.read(address3));
+//    Serial.print( EEPROM.read(address4));
+//    Serial.println("");
+//
+//    delay(400);
+//    userRFID = "";
+//  }
+//}
+
+void ledsign()
+{
+  if(EEPROM.read(address1) == 2)digitalWrite(led1,HIGH);
+  if(EEPROM.read(address2) == 2)digitalWrite(led2,HIGH);
+  if(EEPROM.read(address3) == 2)digitalWrite(led3,HIGH);
+  if(EEPROM.read(address4) == 2)digitalWrite(led4,HIGH);
+
+  Serial.print( EEPROM.read(address1));
+  Serial.print( EEPROM.read(address2));
+  Serial.print( EEPROM.read(address3));
+  Serial.print( EEPROM.read(address4));
+  
+  Serial.println("");
+  
+  delay(1000);
+  
+  digitalWrite(led1,LOW);
+  digitalWrite(led2,LOW);
+  digitalWrite(led3,LOW);
+  digitalWrite(led4,LOW);
+  
+}
+
+String regDevice(){
+  StaticJsonDocument<200> jsonDoc;
+  jsonDoc["id"] = idDevice;
+
+  // Serialize the JSON document to a string
+  String jsonString;
+  serializeJson(jsonDoc, jsonString);
+  
+    WiFiClientSecure client;
+    client.setInsecure();
+
+    HTTPClient https;
+    String endpoint = "/register";
+    String query = "?id=";
+
+    String fullUrl = url + endpoint;
+
+    Serial.print("Requesting: ");
+    Serial.println(fullUrl);
+
+    if (https.begin(client, fullUrl)) {
+      https.addHeader("Content-Type", "application/json");
+        int httpCode = https.POST(jsonString);
+        Serial.print("HTTP Response Code: ");
+        Serial.println(httpCode);
+        
+          DynamicJsonDocument doc(1024);
+          deserializeJson(doc, https.getString());
+          String message = doc["message"];
+          
+        if (httpCode > 0) {
+            Serial.println("Response Body: ");
+            Serial.println(message);
+        }
+        https.end();
+
+        return message;
+    } else {
+        Serial.println("[HTTPS] Unable to connect");
+        return "Unable to connect";
+    }
+}
+
+void logs() {
+  IPAddress ipAddress = WiFi.localIP();
+  String ip = ipAddress.toString();
+  
+  StaticJsonDocument<200> jsonDoc;
+  jsonDoc["id"] = idDevice;
+  jsonDoc["ip"] = ip;
+  jsonDoc["ssid"] = ssid;
+
+  // Serialize the JSON document to a string
+  String jsonString;
+  serializeJson(jsonDoc, jsonString);
+  
+    WiFiClientSecure client;
+    client.setInsecure();
+
+    HTTPClient https;
+
+    String endpoint = "/logs";
+    String query = "?id=";
+
+    String fullUrl = url + endpoint;
+    
+    Serial.print("Requesting: ");
+    Serial.println(fullUrl);
+    
+    if (https.begin(client, fullUrl)) {
+      https.addHeader("Content-Type", "application/json");
+        int httpCode = https.POST(jsonString);
+        Serial.print("HTTP Response Code: ");
+        Serial.println(httpCode);
+        if (httpCode > 0) {
+          DynamicJsonDocument doc(1024);
+          deserializeJson(doc, https.getString());
+          String message = doc["message"];
+          
+            Serial.println("Response Body: ");
+            Serial.println(message);
+        }
+        https.end();
+    } else {
+        Serial.println("[HTTPS] Unable to connect");
+    }
+}
+
+bool online() {
+  char ip[16]; // Menyimpan alamat IP sebagai string
+  WiFi.localIP().toString().toCharArray(ip, 16); // Mendapatkan alamat IP dan mengonversinya menjadi string
+  
+  StaticJsonDocument<200> jsonDoc;
+  jsonDoc["id"] = idDevice;
+  jsonDoc["ip"] = ip;
+  jsonDoc["ssid"] = ssid;
+
+  char jsonString[200]; // Buffer untuk menyimpan string JSON
+  serializeJson(jsonDoc, jsonString, sizeof(jsonString)); // Serialisasi JSON
+
+  WiFiClientSecure client;
+  client.setInsecure();
+
+  HTTPClient https;
+  String endpoint = "/keep-online";
+
+  String fullUrl = url + endpoint;
+
+  Serial.print("Requesting: ");
+  Serial.println(fullUrl);
+
+  if (https.begin(client, fullUrl)) {
+    https.addHeader("Content-Type", "application/json");
+    int httpCode = https.POST(jsonString);
+    Serial.print("HTTP Response Code: ");
+    Serial.println(httpCode);
+    
+    bool deviceStatus = false; // Default status perangkat adalah false
+
+    if (httpCode > 0) {
+      if (httpCode == HTTP_CODE_OK) {
+        DynamicJsonDocument doc(1024);
+        deserializeJson(doc, https.getString());
+        deviceStatus = doc["message"];// Ambil status perangkat dari respons JSON
+         EEPROM.write(address3, 2);
+        EEPROM.commit();
+        ledsign();
+      }
+    } else {
+      EEPROM.write(address1, 2);
+        EEPROM.commit();
+         ledsign();
+      Serial.println("Error: No response from server");
+    }
+    https.end();
+        EEPROM.write(address3, 0);
+        EEPROM.write(address1, 0);
+        EEPROM.commit();
+    return deviceStatus;
+  } else {
+    
+    Serial.println("[HTTPS] Unable to connect");
+    return false; // Kembalikan false jika tidak dapat terhubung
+  }
+}
+
+void filterLight(){
+  StaticJsonDocument<200> jsonDoc;
+  jsonDoc["id"] = idDevice;
+
+  // Serialize the JSON document to a string
+  String jsonString;
+  serializeJson(jsonDoc, jsonString);
+  
+    WiFiClientSecure client;
+    client.setInsecure();
+
+    HTTPClient https;
+
+    String endpoint = "/light-status";
+    String query = "?id=";
+
+    String fullUrl = url + endpoint;
+    
+    Serial.print("Requesting: ");
+    Serial.println(fullUrl);
+    
+    if (https.begin(client, fullUrl)) {
+      https.addHeader("Content-Type", "application/json");
+        int httpCode = https.POST(jsonString);
+        Serial.print("HTTP Response Code: ");
+        Serial.println(httpCode);
+        if (httpCode > 0) {
+          DynamicJsonDocument doc(1024);
+          deserializeJson(doc, https.getString());
+//          String message = doc["message"];
+            Serial.println(doc["green"]["status"].as<int>());
+        }
+        https.end();
+    } else {
+        Serial.println("[HTTPS] Unable to connect");
+    }
+}
+
+void handleOnline(){
+  unsigned long currentMillis = millis();
+  if(currentMillis - previousMillis >= 10000){
+    previousMillis = currentMillis;
+    online();
+  }
+}
+
+void handleButton(){
   currentState = digitalRead(BUTTON_PIN);
   if(lastState == HIGH && currentState == LOW)        // button is pressed
     pressedTime = millis();
@@ -126,17 +452,23 @@ void loop() {
     long pressDuration = releasedTime - pressedTime;
 
     if( pressDuration < SHORT_PRESS_TIME )
-      {
+      {filterLight();
         Serial.println("A short press is detected");
         Serial.println("read Eeprom");
+        EEPROM.write(address1, 2);
+        EEPROM.write(address2, 2);
+        EEPROM.commit();
         ledsign();
+        EEPROM.write(address1, 0);
+        EEPROM.write(address2, 0);
+        EEPROM.commit();
       }
     if( pressDuration > SHORT_PRESS_TIME )
       {
-        Blynk.virtualWrite(V0, "--");
-        Blynk.virtualWrite(V1, "--");
-        Blynk.virtualWrite(V2, "--");
-        Blynk.virtualWrite(V3, "--");
+//        Blynk.virtualWrite(V0, "--");
+//        Blynk.virtualWrite(V1, "--");
+//        Blynk.virtualWrite(V2, "--");
+//        Blynk.virtualWrite(V3, "--");
         Serial.println("A Long press is detected");
         Serial.println("Clear Eeprom");
         EEPROM.write(address1, 0);
@@ -150,108 +482,4 @@ void loop() {
   // save the the last state
   lastState = currentState;
 
-
-}
-void readRFID(void)
-{
-  boolean success;
-  uint8_t uid[] = {0, 0, 0, 0, 0, 0, 0};
-  uint8_t uidLength;
-
-  success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, &uid[0], &uidLength);
-
-  if (success)
-  {
-    for (uint8_t i = 0; i < uidLength; i++)
-    {
-      if (uid[i] <= 0xF) {
-        userRFID += "0";
-      }
-      userRFID += String(uid[i] & 0xFF, HEX);
-    }
-    userRFID.toUpperCase();
-    Serial.println(userRFID);
-
-    if(userRFID == "BECE816E")
-    {
-      Blynk.virtualWrite(V0, ">:|");
-      Serial.println("kartu 1");
-      Blynk.logEvent("led","says red");
-      digitalWrite(led1,HIGH);
-      EEPROM.write(address1, 2);
-      EEPROM.commit();
-      delay(1000);
-      digitalWrite(led1,LOW);
-      //ledsign();
-    }
-    
-    if(userRFID == "BEE0806E")
-    {
-      Blynk.virtualWrite(V1, "YESSIR");
-      Serial.println("kartu 2");
-      Blynk.logEvent("led","says yellow");
-      digitalWrite(led2,HIGH);
-      EEPROM.write(address2, 2);
-       EEPROM.commit();
-      delay(1000);
-      digitalWrite(led2,LOW);
-     //ledsign(); 
-    }
-
-    if(userRFID == "6EF18B6E")
-    {
-      Blynk.virtualWrite(V2, "YESSIR");
-      Serial.println("kartu 3");
-      digitalWrite(led3,HIGH);
-      Blynk.logEvent("led","says green");
-      EEPROM.write(address3, 2);
-       EEPROM.commit();
-      delay(1000);
-      digitalWrite(led3,LOW);
-     //ledsign(); 
-    }
-
-    if(userRFID == "4E637F6E") 
-    {
-      Blynk.virtualWrite(V3, "YESSIR");
-      Blynk.logEvent("led","says blue");
-      Serial.println("kartu 4");
-      digitalWrite(led4,HIGH);
-      EEPROM.write(address4, 2);
-       EEPROM.commit();
-
-      delay(1000);
-      digitalWrite(led4,LOW);
-     //ledsign(); 
-    }
-
-    Serial.print( EEPROM.read(address1));
-    Serial.print( EEPROM.read(address2));
-    Serial.print( EEPROM.read(address3));
-    Serial.print( EEPROM.read(address4));
-    Serial.println("");
-
-    delay(400);
-    userRFID = "";
-  }
-}
-
-void ledsign()
-{
-  if(EEPROM.read(address1) == 2)digitalWrite(led1,HIGH);
-  if(EEPROM.read(address2) == 2)digitalWrite(led2,HIGH);
-  if(EEPROM.read(address3) == 2)digitalWrite(led3,HIGH);
-  if(EEPROM.read(address4) == 2)digitalWrite(led4,HIGH);
-  Serial.print( EEPROM.read(address1));
-
-  Serial.print( EEPROM.read(address2));
-  Serial.print( EEPROM.read(address3));
-  Serial.print( EEPROM.read(address4));
-  Serial.println("");
-  delay(1000);
-  digitalWrite(led1,LOW);
-  digitalWrite(led2,LOW);
-  digitalWrite(led3,LOW);
-  digitalWrite(led4,LOW);
-  
 }

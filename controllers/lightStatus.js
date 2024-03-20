@@ -46,7 +46,7 @@ exports.light = async (req, res) => {
 
 exports.getLight = async (req, res) => {
   try {
-    const data = await deviceModel.findOne({ idDevice: req.query.id });
+    const data = await deviceModel.findOne({ idDevice: req.body.id });
     const light = data.light;
 
     const result = {};
