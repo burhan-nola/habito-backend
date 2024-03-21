@@ -46,15 +46,34 @@ exports.light = async (req, res) => {
 
 exports.getLight = async (req, res) => {
   try {
+    const date = new Date();
+    const offsetInMinutes = +420;
+    const local = new Date(date.getTime() + offsetInMinutes * 60000);
+    const tanggal = local.toISOString().split("T")[0];
+
     const data = await deviceModel.findOne({ idDevice: req.body.id });
-    const light = data.light;
+    const dataLight = JSON.stringify(data.light);
+    const parseLight = JSON.parse(dataLight);
+
+    function filterByDate(parseLight, date) {
+      for (let color in parseLight) {
+        if (Array.isArray(parseLight[color])) {
+          parseLight[color] = parseLight[color].filter(
+            (obj) => new Date(obj.date).toISOString().slice(0, 10) === date
+          );
+        }
+      }
+      return parseLight;
+    }
+
+    const filteredData = filterByDate(parseLight, tanggal);
 
     const result = {};
-    for (const color in light) {
-      if (Array.isArray(light[color])) {
+    for (const color in filteredData) {
+      if (Array.isArray(filteredData[color])) {
         // Check if the color data is not empty
-        if (light[color].length > 0) {
-          result[color] = light[color][light[color].length - 1];
+        if (filteredData[color].length > 0) {
+          result[color] = filteredData[color][filteredData[color].length - 1];
         } else {
           // If color data is empty, set status to false
           result[color] = { status: false };

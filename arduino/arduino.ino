@@ -7,8 +7,8 @@
 #include <ESP8266WiFi.h>
 //#include <BlynkSimpleEsp8266.h>
 #include "Wire.h"
-//#include "PN532_I2C.h"
-//#include "PN532.h"
+#include "PN532_I2C.h"
+#include "PN532.h"
 #include <EEPROM.h>
 #include <ESP8266HTTPClient.h>
 #include <WiFiClientSecure.h>
@@ -108,25 +108,22 @@ void setup() {
   while (WiFi.status() != WL_CONNECTED)
   {
     Serial.print("."); 
-    delay(500); 
-  EEPROM.write(address1, 2);
-  EEPROM.write(address2, 2);
-  EEPROM.write(address3, 2);
-  EEPROM.write(address4, 2);
-  EEPROM.commit();
-  ledsign(); 
+    delay(500);
+    digitalWrite(led1,HIGH);
+    digitalWrite(led2,HIGH);
+    digitalWrite(led3,HIGH);
+    digitalWrite(led4,HIGH);
+ 
   }
     Serial.println("Wifi Connected"); 
     Serial.println("IP address: ");
     Serial.println(WiFi.localIP());
     regDevice();
     logs();
-    EEPROM.write(address1, 0);
-  EEPROM.write(address2, 0);
-  EEPROM.write(address3, 0);
-  EEPROM.write(address4, 0);
-  EEPROM.commit();
-  ledsign();
+    digitalWrite(led1,LOW);
+    digitalWrite(led2,LOW);
+    digitalWrite(led3,LOW);
+    digitalWrite(led4,LOW);
 
 }
 
