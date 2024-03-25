@@ -1,11 +1,4 @@
-#define BLYNK_TEMPLATE_ID "TMPL6WcoQd7pO"
-#define BLYNK_TEMPLATE_NAME "Habito Blynk"
-#define BLYNK_AUTH_TOKEN "EIFbZPYxMWEzQqq9VGSlo2PrIO_ZQGHa"
-#define BLYNK_PRINT Serial
-
-
 #include <ESP8266WiFi.h>
-//#include <BlynkSimpleEsp8266.h>
 #include "Wire.h"
 #include "PN532_I2C.h"
 #include "PN532.h"
@@ -17,12 +10,11 @@
 
 char ssid[] = "NOLA 37G";
 char pass[] = "12345678";
-//char auth[] = BLYNK_AUTH_TOKEN;
-String idDevice = "habito_001"; //change this based on the device id
+String idDevice = "habito_002"; //change this based on the device id
 String url = "https://habito-api.vercel.app"; //this is the API url
 
-//PN532_I2C pn532i2c(Wire);
-//PN532 nfc(pn532i2c);
+PN532_I2C pn532i2c(Wire);
+PN532 nfc(pn532i2c);
 
 String userRFID = "";
 
@@ -45,34 +37,13 @@ int currentState;
 unsigned long pressedTime  = 0;
 unsigned long releasedTime = 0;
 
-
-
-
-//BlynkTimer timer;
-
-
-
-// This function is called every time the device is connected to the Blynk.Cloud
-
-
-// This function sends Arduino's uptime every second to Virtual Pin 2.
-
-
-
 int LED1 = D5;
 int LED2 = D6;
 int LED3 = D7;
 int LED4 = D8;
 int buton = D3;
 
-
-
-
-
-
-
 void setup() {
-  // put your setup code here, to run once:
   Serial.begin(115200);
   pinMode(LED1,OUTPUT);
   pinMode(LED2,OUTPUT);
@@ -80,30 +51,29 @@ void setup() {
   pinMode(LED4,OUTPUT);
   pinMode(buton,INPUT);
   EEPROM.begin(512);
-//  nfc.begin();
+  nfc.begin();
 
-//  uint32_t versiondata = nfc.getFirmwareVersion();
-//  if (! versiondata) {
-//    Serial.print("Didn't find PN53x board");
-//    while (1); // halt
-//  }
+  uint32_t versiondata = nfc.getFirmwareVersion();
+  if (! versiondata) {
+    Serial.print("Didn't find PN53x board");
+    while (1); // halt
+  }
   // Got ok data, print it out!
-//  Serial.print("Found chip PN5"); Serial.println((versiondata >> 24) & 0xFF, HEX);
-//  Serial.print("Firmware ver. "); Serial.print((versiondata >> 16) & 0xFF, DEC);
-//  Serial.print('.'); Serial.println((versiondata >> 8) & 0xFF, DEC);
+  Serial.print("Found chip PN5"); Serial.println((versiondata >> 24) & 0xFF, HEX);
+  Serial.print("Firmware ver. "); Serial.print((versiondata >> 16) & 0xFF, DEC);
+  Serial.print('.'); Serial.println((versiondata >> 8) & 0xFF, DEC);
 
   //  Non-blocking procedure
-//  nfc.setPassiveActivationRetries(0x01);
+  nfc.setPassiveActivationRetries(0x01);
  
   // configure board to read RFID tags
-//  nfc.SAMConfig();
+  nfc.SAMConfig();
 
-//  Serial.println("Waiting for an ISO14443A Card ...");
+  Serial.println("Waiting for an ISO14443A Card ...");
 
 
   pinMode(LED_BUILTIN,OUTPUT);
-   WiFi.begin(ssid, pass);
-//  Blynk.begin(auth, ssid, pass);
+  WiFi.begin(ssid, pass);
  
   while (WiFi.status() != WL_CONNECTED)
   {
@@ -132,97 +102,73 @@ unsigned long previousMillis = 0;
 void loop() {
 //  Blynk.run();
 //  timer.run();
-//  readRFID();
-
-
-handleOnline();
-handleButton();
   
 
+
+//handleOnline();
+handleButton();
+  readRFID();
+
 }
-//void readRFID(void)
-//{
-//  boolean success;
-//  uint8_t uid[] = {0, 0, 0, 0, 0, 0, 0};
-//  uint8_t uidLength;
-//
-//  success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, &uid[0], &uidLength);
-//
-//  if (success)
-//  {
-//    for (uint8_t i = 0; i < uidLength; i++)
-//    {
-//      if (uid[i] <= 0xF) {
-//        userRFID += "0";
-//      }
-//      userRFID += String(uid[i] & 0xFF, HEX);
-//    }
-//    userRFID.toUpperCase();
-//    Serial.println(userRFID);
-//
-//    if(userRFID == "BECE816E")
-//    {
-//      Blynk.virtualWrite(V0, ">:|");
-//      Serial.println("kartu 1");
-//      Blynk.logEvent("led","says red");
-//      digitalWrite(led1,HIGH);
-//      EEPROM.write(address1, 2);
-//      EEPROM.commit();
-//      delay(1000);
-//      digitalWrite(led1,LOW);
-//      //ledsign();
-//    }
-//    
-//    if(userRFID == "BEE0806E")
-//    {
-//      Blynk.virtualWrite(V1, "YESSIR");
-//      Serial.println("kartu 2");
-//      Blynk.logEvent("led","says yellow");
-//      digitalWrite(led2,HIGH);
-//      EEPROM.write(address2, 2);
-//       EEPROM.commit();
-//      delay(1000);
-//      digitalWrite(led2,LOW);
-//     //ledsign(); 
-//    }
-//
-//    if(userRFID == "6EF18B6E")
-//    {
-//      Blynk.virtualWrite(V2, "YESSIR");
-//      Serial.println("kartu 3");
-//      digitalWrite(led3,HIGH);
-//      Blynk.logEvent("led","says green");
-//      EEPROM.write(address3, 2);
-//       EEPROM.commit();
-//      delay(1000);
-//      digitalWrite(led3,LOW);
-//     //ledsign(); 
-//    }
-//
-//    if(userRFID == "4E637F6E") 
-//    {
-//      Blynk.virtualWrite(V3, "YESSIR");
-//      Blynk.logEvent("led","says blue");
-//      Serial.println("kartu 4");
-//      digitalWrite(led4,HIGH);
-//      EEPROM.write(address4, 2);
-//       EEPROM.commit();
-//
-//      delay(1000);
-//      digitalWrite(led4,LOW);
-//     //ledsign(); 
-//    }
-//
-//    Serial.print( EEPROM.read(address1));
-//    Serial.print( EEPROM.read(address2));
-//    Serial.print( EEPROM.read(address3));
-//    Serial.print( EEPROM.read(address4));
-//    Serial.println("");
-//
-//    delay(400);
-//    userRFID = "";
-//  }
-//}
+
+void readRFID(void)
+{
+  boolean success;
+  uint8_t uid[] = {0, 0, 0, 0, 0, 0, 0};
+  uint8_t uidLength;
+
+  success = nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, &uid[0], &uidLength);
+
+  if (success)
+  {
+    for (uint8_t i = 0; i < uidLength; i++)
+    {
+      if (uid[i] <= 0xF) {
+        userRFID += "0";
+      }
+      userRFID += String(uid[i] & 0xFF, HEX);
+    }
+    userRFID.toUpperCase();
+    Serial.println(userRFID);
+
+    if(userRFID == "BECE816E")
+    {
+      Serial.println("kartu 1");
+      digitalWrite(led1,HIGH);
+      delay(1000);
+      digitalWrite(led1,LOW);
+      String color = "red";
+      light(color);
+    }
+    
+    if(userRFID == "BEE0806E")
+    {
+      Serial.println("kartu 2");
+      digitalWrite(led2,HIGH);
+      delay(1000);
+      digitalWrite(led2,LOW);
+    }
+
+    if(userRFID == "6EF18B6E")
+    {
+      Serial.println("kartu 3");
+      digitalWrite(led3,HIGH);
+      delay(1000);
+      digitalWrite(led3,LOW);
+    }
+
+    if(userRFID == "4E637F6E") 
+    {
+      Serial.println("kartu 4");
+      digitalWrite(led4,HIGH);
+      delay(1000);
+      digitalWrite(led4,LOW);
+     //ledsign(); 
+    }
+
+    userRFID = "";
+  }
+}
 
 void ledsign()
 {
@@ -454,9 +400,40 @@ void filterLight(){
     }
 }
 
+void light(String color){
+  WiFiClientSecure client;
+  client.setInsecure();
+
+  HTTPClient https;
+  String endpoint = "/light";
+  String light = "&light=";
+  String query = "?id=";
+  
+  String fullUrl = url + endpoint + query + idDevice + light + color;
+   
+  Serial.print("Requesting: ");
+  Serial.println(fullUrl);
+  
+  if (https.begin(client, fullUrl)) {
+    int httpCode = https.GET();
+    Serial.print("HTTP Response Code: ");
+    Serial.println(httpCode);
+    if (httpCode > 0) {
+      DynamicJsonDocument doc(1024);
+      deserializeJson(doc, https.getString());
+      String message = doc["message"];
+        Serial.println("Response Body: ");
+        Serial.println(message);
+    }
+    https.end();
+  } else {
+      Serial.println("[HTTPS] Unable to connect");
+  }
+}
+
 void handleOnline(){
   unsigned long currentMillis = millis();
-  if(currentMillis - previousMillis >= 10000){
+  if(currentMillis - previousMillis >= 30000){
     previousMillis = currentMillis;
     online();
   }
@@ -496,10 +473,6 @@ void handleButton(){
       }
     if( pressDuration > SHORT_PRESS_TIME )
       {
-//        Blynk.virtualWrite(V0, "--");
-//        Blynk.virtualWrite(V1, "--");
-//        Blynk.virtualWrite(V2, "--");
-//        Blynk.virtualWrite(V3, "--");
         Serial.println("A Long press is detected");
         Serial.println("Clear Eeprom");
         EEPROM.write(address1, 0);

@@ -3,7 +3,7 @@ const deviceModel = require("../models/devices.js");
 
 exports.try = async (req, res) => {
   try {
-    const data = await deviceModel.findOne({ idDevice: req.body.id });
+    const data = await deviceModel.findOne({ idDevice: req.query.id });
     res.status(200).json(data);
   } catch (error) {
     res.status(500).json(error);
