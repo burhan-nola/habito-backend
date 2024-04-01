@@ -4,7 +4,7 @@ const deviceModel = require("../models/devices.js");
 exports.try = async (req, res) => {
   try {
     // const data = await deviceModel.findOne({ idDevice: req.query.id });
-    const rfid = req.body.uid;
+    const rfid = req.query.uid;
 
     res.status(200).send(rfid);
   } catch (error) {
