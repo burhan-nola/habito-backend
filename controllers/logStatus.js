@@ -126,7 +126,7 @@ exports.cekStatus = async (req, res) => {
       return res.status(200).json(sendData);
     }
 
-    if (second > 5) {
+    if (second > 20) {
       const updateData = await deviceModel
         .findOneAndUpdate(
           { idDevice: req.query.id },

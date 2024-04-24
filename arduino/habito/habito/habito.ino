@@ -1,13 +1,14 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include <WiFiClientSecure.h>
+//#include <HTTPClient.h>
 #include <ArduinoJson.h>
 
-const char* SSID = "Bukan WiFi Gratis";
-const char* PASS = "langsungconnect";
+const char* SSID = "NOLA 37G";
+const char* PASS = "12345678";
 String idDevice = "habito_001"; //change this based on the device id
-//String url = "https://habito-api.vercel.app"; //this is the API url
-const char* url = "http://192.168.219.98:80/habito-api/index.php";
+String url = "https://habito-api.vercel.app/data?uid=123123"; //this is the API url
+//const char* url = "http://192.168.219.98:80/habito-api/index.php";
 
 void setup() {  
   Serial.begin(115200);

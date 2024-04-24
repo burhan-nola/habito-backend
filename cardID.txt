@@ -1,0 +1,4 @@
+red=bece816e
+green=6ef18b6e
+blue=4e637f6e
+yellow=bee0806e
