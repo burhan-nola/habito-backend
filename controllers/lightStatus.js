@@ -51,7 +51,7 @@ exports.getLight = async (req, res) => {
     const local = new Date(date.getTime() + offsetInMinutes * 60000);
     const tanggal = local.toISOString().split("T")[0];
 
-    const data = await deviceModel.findOne({ idDevice: req.body.id });
+    const data = await deviceModel.findOne({ idDevice: req.query.id });
     const dataLight = JSON.stringify(data.light);
     const parseLight = JSON.parse(dataLight);
 
