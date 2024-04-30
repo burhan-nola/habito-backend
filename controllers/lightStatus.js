@@ -144,3 +144,12 @@ exports.editTask = async (req, res) => {
     res.status(500).json(error);
   }
 };
+
+exports.allLightData = async (req, res) => {
+  try {
+    const data = await deviceModel.findOne({ idDevice: req.query.id });
+    res.status(200).json(data);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};
