@@ -27,6 +27,7 @@ exports.register = async (req, res) => {
     };
     const dataSend = {
       idDevice: req.body.id,
+      password: req.body.password,
       lastUpdate: local,
       dateRegister: local,
       light: {
