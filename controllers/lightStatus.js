@@ -154,3 +154,15 @@ exports.allLightData = async (req, res) => {
     res.status(500).json(error);
   }
 };
+
+exports.abortData = async (req, res) => {
+  try {
+    const data = await deviceModel.findOne({ idDevice: req.query.id });
+    const color = req.query.color;
+    data.light[color].pop();
+    data.save();
+    res.status(200).json(data.light[color]);
+  } catch (error) {
+    res.status(500).json(error);
+  }
+};

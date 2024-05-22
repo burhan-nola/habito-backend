@@ -20,6 +20,7 @@ router.get("/filter-light", lightStatus.filterLight);
 router.get("/detail-task", lightStatus.detailTask);
 router.post("/edit-task", lightStatus.editTask);
 router.get("/task-history", lightStatus.allLightData);
+router.get("/abort-task", lightStatus.abortData);
 
 //web
 router.post("/login", account.login);
